@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import MintCDHModal from "~~/components/MintCDHModal";
 import Modal from "~~/components/Modal";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { formatUnixTimestampBigInt } from "~~/utils/helper";
@@ -26,7 +25,6 @@ type DomainCardPorps = {
  */
 export const DomainCard = (porps: DomainCardPorps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isMintCDHOpen, setIsMintCDHOpen] = useState(false);
   const [expirationDate, setExpirationDate] = useState("");
 
   const { writeContractAsync } = useWriteContract();
@@ -81,18 +79,6 @@ export const DomainCard = (porps: DomainCardPorps) => {
     query: {
       enabled: false,
       retry: false,
-    },
-  });
-  // get CDH's balance
-  const { data: balance, refetch: getBalance } = useReadContract({
-    address: porps.cdhContractData.address,
-    functionName: "balanceOf",
-    abi: porps.cdhContractData.abi,
-    args: [address as string],
-    chainId: targetNetwork.id,
-    query: {
-      enabled: false,
-      retry: true,
     },
   });
 
@@ -189,11 +175,9 @@ export const DomainCard = (porps: DomainCardPorps) => {
       await getOwner();
       await getTokenUri();
       await getExpirationDate();
-      await getBalance();
       console.log("owner:", owner);
       console.log("record:", record);
       console.log("tokenUri:", tokenUri);
-      console.log("balance:", balance);
       console.log("expirationDateBigInt:", expirationDateBigInt);
     };
     init();
@@ -213,13 +197,6 @@ export const DomainCard = (porps: DomainCardPorps) => {
           onOk={() => setIsOpen(false)}
           deployedContractData={porps.deployedContractData}
           domain={porps.name}
-        />
-        <MintCDHModal
-          open={isMintCDHOpen}
-          onCancel={() => setIsMintCDHOpen(false)}
-          onOk={() => setIsMintCDHOpen(false)}
-          deployedContractData={porps.deployedContractData}
-          address={address as string}
         />
         {record != undefined && owner != undefined && (
           <>
@@ -255,28 +232,15 @@ export const DomainCard = (porps: DomainCardPorps) => {
                       <strong>expirationDate: {expirationDate}</strong>
                     </p>
                   </div>
-                  {balance != undefined && (
-                    <>
-                      {balance != 0 ? (
-                        <p>
-                          <a
-                            className="underline"
-                            target="_blank"
-                            href={getBlockExplorerAddressLink(targetNetwork, porps.cdhContractData.address as any)}
-                          >
-                            Check Your CDH
-                          </a>
-                        </p>
-                      ) : (
-                        <button
-                          onClick={() => setIsMintCDHOpen(true)}
-                          className="absolute bottom-4 right-12 bg-white text-blue-500 rounded-full p-2 mr-1 shadow-lg hover:bg-gray-200 transition-colors"
-                        >
-                          Mint CDH
-                        </button>
-                      )}
-                    </>
-                  )}
+                  <p>
+                    <a
+                      className="underline"
+                      target="_blank"
+                      href={getBlockExplorerAddressLink(targetNetwork, porps.cdhContractData.address as any)}
+                    >
+                      Check Your CDH
+                    </a>
+                  </p>
                   <button
                     onClick={() => setIsOpen(true)}
                     className="absolute bottom-4 right-3 bg-white text-blue-500 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors"
@@ -301,13 +265,6 @@ export const DomainCard = (porps: DomainCardPorps) => {
           onOk={() => setIsOpen(false)}
           deployedContractData={porps.deployedContractData}
           domain={porps.name}
-        />
-        <MintCDHModal
-          open={isMintCDHOpen}
-          onCancel={() => setIsMintCDHOpen(false)}
-          onOk={() => setIsMintCDHOpen(false)}
-          deployedContractData={porps.deployedContractData}
-          address={address as string}
         />
         {record != undefined && owner != undefined && (
           <div className="card w-96 text-primary-content m-2 bg-gradient-to-r from-blue-500 via-orange-500 to-pink-500 text-white p-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">
@@ -352,46 +309,12 @@ export const DomainCard = (porps: DomainCardPorps) => {
               </div>
             </div>
             {owner == address && (
-              <>
-                {balance != undefined && (
-                  <>
-                    {balance != 0 ? (
-                      <p>
-                        <a
-                          className="underline"
-                          target="_blank"
-                          href={getBlockExplorerAddressLink(targetNetwork, porps.cdhContractData.address as any)}
-                        >
-                          Check Your CDH
-                        </a>
-                      </p>
-                    ) : (
-                      <button
-                        onClick={() => setIsMintCDHOpen(true)}
-                        className="absolute bottom-4 right-12 bg-white text-blue-500 rounded-full p-2 mr-1 shadow-lg hover:bg-gray-200 transition-colors"
-                      >
-                        Mint CDH
-                      </button>
-                    )}
-                  </>
-                )}
-                <button
-                  onClick={() => setIsOpen(true)}
-                  className="absolute bottom-4 right-3 bg-white text-blue-500 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors"
-                >
-                  <PencilIcon className="h-5 w-5" />
-                </button>
-                {/*
-                <div>
-                  <button
-                    onClick={listItem}
-                    className="bottom-4 right-3 bg-white text-blue-500 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors"
-                  >
-                    <ShoppingCartIcon className="h-5 w-5" />
-                  </button>
-                </div>
-                */}
-              </>
+              <button
+                onClick={() => setIsOpen(true)}
+                className="absolute bottom-4 right-3 bg-white text-blue-500 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors"
+              >
+                <PencilIcon className="h-5 w-5" />
+              </button>
             )}
           </div>
         )}
