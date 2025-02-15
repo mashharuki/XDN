@@ -8,11 +8,12 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : `http://localhost:${process.env.PORT || 3000}`;
 const imageUrl = `${baseUrl}/thumbnail.jpg`;
-
+// Meta data
 const title = "Xenea Domain Name Service";
 const titleTemplate = "%s | Xenea Domain Name Service";
 const description = "Built with 🏗 Scaffold-ETH 2";
 
+// Meta data
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
@@ -46,6 +47,11 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * ScaffoldEthApp component
+ * @param param0
+ * @returns
+ */
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
