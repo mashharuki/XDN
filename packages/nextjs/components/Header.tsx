@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { MapIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
+import { MapIcon } from "@heroicons/react/24/solid";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -24,11 +24,6 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Domains",
     href: "/domains",
     icon: <MapIcon className="h-4 w-4" />,
-  },
-  {
-    label: "MarketPlace",
-    href: "/market",
-    icon: <ShoppingCartIcon className="h-4 w-4" />,
   },
 ];
 
@@ -102,7 +97,7 @@ export const Header = () => {
             <Image alt="SE2 logo" className="cursor-pointer" fill src="/favicon.png" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Xenea Domain Name Service</span>
+            <span className="font-bold leading-tight">XDN α.ver</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">

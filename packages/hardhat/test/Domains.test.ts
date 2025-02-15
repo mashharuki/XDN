@@ -5,8 +5,6 @@ import {ethers} from "hardhat";
 import {ForwardRequest} from "../lib/types";
 import {
   Domains,
-  NFTMarketplace,
-  NFTMarketplace__factory,
   SampleForwarder,
   SampleForwarder__factory,
 } from "../typechain-types";
@@ -28,29 +26,21 @@ describe("Domains", function () {
       await ethers.getContractFactory("SampleForwarder");
     const forwarder: SampleForwarder = await SampleForwarder.deploy();
     await forwarder.waitForDeployment();
-    // deploy NFTMarketPlace Contract
-    const NFTMarketplace: NFTMarketplace__factory =
-      await ethers.getContractFactory("NFTMarketplace");
-    const marketplace: NFTMarketplace = await NFTMarketplace.deploy();
-    await marketplace.waitForDeployment();
     // deploy contract
     const Domains = await ethers.getContractFactory("Domains");
     const domains: Domains = await Domains.deploy(
       "xcr",
       forwarder.target,
-      marketplace.target,
       account1.address
     );
     await domains.waitForDeployment();
-    // NFTMarketplaceにDomainsをセット
-    await marketplace.setDomainsContract(domains.target);
-
-    return {domains, forwarder, marketplace, account1, account2};
+    return {domains, forwarder, account1, account2};
   }
 
   /**
    * タイプスタンプをyyyy/mm/dd形式に変換するメソッド
    */
+  /*
   const formatUnixTimestampBigInt = (timestamp: bigint): string => {
     // Unix タイムスタンプをミリ秒に変換
     const milliseconds = Number(timestamp) * 1000;
@@ -62,105 +52,7 @@ describe("Domains", function () {
 
     return `${year}/${month}/${day}`;
   };
-
-  describe("Marketplace", function () {
-    it("Should emit Domain Transfer event", async function () {
-      const {domains, marketplace, account1} = await deployContract();
-      const price = await domains.price("domain", 1);
-      const txn = await domains
-        .connect(account1)
-        .register(account1.address, "domain", 1, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
-      await txn.wait();
-
-      // 有効期限を取得する。
-      const expirationDate = await domains.expirationDates(0);
-      console.log("expirationDate:", formatUnixTimestampBigInt(expirationDate));
-
-      // 1年経過させる。
-      await time.increase(365 * 24 * 60 * 60 + 1);
-
-      // checkExpirationを実行し、トランザクションが成功するか確認する
-      const tx = await domains.connect(account1).checkExpiration(0);
-
-      // イベントがハッカしているか確認
-      await expect(tx)
-        .to.emit(domains, "DomainTransferred")
-        .withArgs(0, marketplace.target);
-    });
-    it("Should list and buy domain successfully", async function () {
-      const {domains, marketplace, account1, account2} = await deployContract();
-      const price = await domains.price("domain", 1);
-      const txn = await domains
-        .connect(account1)
-        .register(account1.address, "domain", 1, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
-      await txn.wait();
-
-      // 1年経過させる。
-      await time.increase(365 * 24 * 60 * 60 + 1);
-
-      const txn2 = await domains.connect(account1).checkExpiration(0);
-      await txn2.wait();
-
-      // イベントが発火しているか確認
-      await expect(txn2)
-        .to.emit(marketplace, "Listed")
-        .withArgs(0, domains.target);
-
-      // リストされているドメインを取得する。
-      const listedDomain = marketplace.listings(0);
-
-      expect((await listedDomain).tokenId).to.equal(0);
-      expect((await listedDomain).seller).to.equal(domains.target);
-
-      // リストされているドメインを一覧で取得する。
-      const allListings = await marketplace.getAllListings();
-      // 一覧で取得したデータの中身をチェックする。
-      expect(allListings.length).to.equal(1);
-      expect(allListings[0][0]).to.equal(0);
-      expect(allListings[0][1]).to.equal(domains.target);
-
-      await marketplace.connect(account2).buyItem(0, "domain", 1, {
-        value: ethers.parseEther("0.005"),
-      });
-
-      // リストされているドメインが一件もないことを確認する。
-      const allListings2 = await marketplace.getAllListings();
-      // 一覧で取得したデータの中身をチェックする。
-      expect(allListings2.length).to.equal(0);
-
-      const domainOwner = await domains.domains("domain");
-      expect(domainOwner).to.equal(account2.address);
-    });
-
-    it("Should emit BuyItem event", async function () {
-      const {domains, marketplace, account1, account2} = await deployContract();
-      const price = await domains.price("sample", 1);
-      const txn = await domains
-        .connect(account1)
-        .register(account1.address, "sample", 1, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
-      await txn.wait();
-
-      // 1年経過させる。
-      await time.increase(365 * 24 * 60 * 60 + 1);
-
-      const txn2 = await domains.connect(account1).checkExpiration(0);
-      await txn2.wait();
-
-      await expect(
-        marketplace.connect(account2).buyItem(0, "sample", 1, {
-          value: ethers.parseEther("0.005"),
-        })
-      )
-        .to.emit(marketplace, "Sold")
-        .withArgs(0, account2.address, price);
-    });
-  });
+  */
 
   describe("Deployment", function () {
     it("Should have the right balance on deploy", async function () {
