@@ -9,6 +9,7 @@ const deployDomainsContract: DeployFunction = async function (
   console.log(
     "===================================== [START] ===================================== "
   );
+  // get deployment accounts data
   const {deployer} = await hre.getNamedAccounts();
   const {deploy} = hre.deployments;
 
@@ -26,7 +27,11 @@ const deployDomainsContract: DeployFunction = async function (
     deployer
   );
 
+  // Top Level Domain
   const tld = "xenea";
+
+  // deploy Domains contract via upgradeable proxy contact
+  //const Domains = await ethers.getContractFactory("Domains");
 
   await deploy("Domains", {
     from: deployer,

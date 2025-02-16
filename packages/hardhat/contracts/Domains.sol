@@ -4,13 +4,22 @@ pragma solidity >=0.8.19;
 import "hardhat/console.sol";
 import {StringUtils} from "./lib/StringUtils.sol";
 import {Base64} from "./lib/Base64.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
 
 /**
  * Domains Cotract
  */
-contract Domains is ERC721URIStorage, ERC2771Context {
+contract Domains is
+  Initializable,
+  ERC721URIStorageUpgradeable,
+  OwnableUpgradeable,
+  UUPSUpgradeable,
+  ERC2771ContextUpgradeable
+{
   // トークンID用の変数を用意する。
   uint256 private _tokenIdCounter;
   // NFT用のイメージデータ
@@ -22,8 +31,6 @@ contract Domains is ERC721URIStorage, ERC2771Context {
 
   // トップレベルドメイン(TLD)
   string public tld;
-  // owner address
-  address payable public owner;
 
   // ドメインとアドレスを紐づけるmap
   mapping(string => address) public domains;
@@ -49,37 +56,34 @@ contract Domains is ERC721URIStorage, ERC2771Context {
   error AlreadyRegistered();
   error InvalidName(string name);
 
-  // ownerであることを確認する修飾子
-  modifier onlyOwner() {
-    require(isOwner());
-    _;
-  }
-
   // 有効期限が切れているかを確認する修飾子
   modifier onlyValidToken(uint256 tokenId) {
     require(expirationDates[tokenId] > block.timestamp, "Token expired");
     _;
   }
 
-  /**
-   * コンストラクター
-   * @param _tld トップレベルドメイン
-   */
   constructor(
-    string memory _tld,
-    address _trustedForwarder,
     address _relayerAddress
-  )
-    payable
-    ERC721("Xenea Domain Name Service", "XDN")
-    ERC2771Context(_trustedForwarder)
-  {
-    // owner addressを設定する。
-    owner = payable(msg.sender);
+  ) ERC2771ContextUpgradeable(_relayerAddress) {}
+
+  /**
+   * initialize function
+   */
+  function initialize(
+    string memory _tld,
+    address _relayerAddress
+  ) public initializer {
+    __ERC721_init("Xenea Domain Name Service", "XDN");
+    __Ownable_init(msg.sender);
+    __UUPSUpgradeable_init();
+    // set tld & relayer address
     tld = _tld;
     relayerAddress = _relayerAddress;
-    console.log("%s name service deployed", _tld);
   }
+
+  function _authorizeUpgrade(
+    address newImplementation
+  ) internal override onlyOwner {}
 
   /**
    * ドメインの長さによって価格を算出するメソッド
@@ -236,13 +240,6 @@ contract Domains is ERC721URIStorage, ERC2771Context {
   }
 
   /**
-   * owner addressであることを確認するメソッド
-   */
-  function isOwner() public view returns (bool) {
-    return msg.sender == owner;
-  }
-
-  /**
    * 資金を引き出すためのメソッド
    */
   function withdraw() public onlyOwner {
@@ -343,7 +340,7 @@ contract Domains is ERC721URIStorage, ERC2771Context {
     internal
     view
     virtual
-    override(Context, ERC2771Context)
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (address sender)
   {
     if (isTrustedForwarder(msg.sender)) {
@@ -361,7 +358,7 @@ contract Domains is ERC721URIStorage, ERC2771Context {
     internal
     view
     virtual
-    override(Context, ERC2771Context)
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (bytes calldata)
   {
     if (isTrustedForwarder(msg.sender)) {
@@ -384,7 +381,7 @@ contract Domains is ERC721URIStorage, ERC2771Context {
   function _contextSuffixLength()
     internal
     view
-    override(Context, ERC2771Context)
+    override(ContextUpgradeable, ERC2771ContextUpgradeable)
     returns (uint256)
   {
     // Custom implementation or logic to resolve conflict

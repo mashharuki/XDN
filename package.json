@@ -1,6 +1,7 @@
 {
-  "name": "se-2",
-  "version": "0.0.1",
+  "name": "XDN",
+  "version": "2.0.0",
+  "author": "Haruki Kondo",
   "private": true,
   "workspaces": {
     "packages": [
@@ -8,6 +9,8 @@
     ]
   },
   "scripts": {
+    "contract": "yarn workspace @se-2/hardhat",
+    "frontend": "yarn workspace @se-2/nextjs",
     "cdk": "yarn workspace @se-2/cdk",
     "setup": "yarn workspace @se-2/hardhat setup",
     "account": "yarn workspace @se-2/hardhat account",
