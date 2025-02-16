@@ -3,7 +3,11 @@ import {time} from "@nomicfoundation/hardhat-network-helpers";
 import {expect} from "chai";
 import {ethers, upgrades} from "hardhat";
 import {ForwardRequest} from "../lib/types";
-import {SampleForwarder, SampleForwarder__factory} from "../typechain-types";
+import {
+  DomainsV2,
+  SampleForwarder,
+  SampleForwarder__factory,
+} from "../typechain-types";
 
 describe("Domains", function () {
   /**
@@ -38,6 +42,23 @@ describe("Domains", function () {
 
     return {domains, forwarder, account1, account2};
   }
+
+  /**
+   * upgrade Domains contract function
+   */
+  const upgradeContract = async (
+    proxyAddress: string,
+    forwarderAddress: string
+  ) => {
+    // get new contract factory
+    const DomainsV2 = await ethers.getContractFactory("DomainsV2");
+    // update contract via proxy
+    const domainV2 = await upgrades.upgradeProxy(proxyAddress, DomainsV2, {
+      constructorArgs: [forwarderAddress],
+    });
+
+    return domainV2 as DomainsV2;
+  };
 
   /**
    * タイプスタンプをyyyy/mm/dd形式に変換するメソッド
@@ -304,7 +325,7 @@ describe("Domains", function () {
         signature: signature,
       };
 
-      console.log("uint48Time:", uint48Time);
+      // console.log("uint48Time:", uint48Time);
 
       // オフチェーンで署名が合っているか確認する。
       const expectedSigner = ethers.verifyTypedData(
@@ -335,7 +356,7 @@ describe("Domains", function () {
       const verifyReslut = await forwarder.verify(request);
       expect(verifyReslut).to.equal(true);
 
-      console.log("request:", request);
+      // console.log("request:", request);
 
       // Fund the Forwarder contract with 0.001 ETH from account1
       await account1.sendTransaction({
@@ -354,6 +375,45 @@ describe("Domains", function () {
       // Check the balance of account1 to ensure the NFT was minted
       const balance = await domains.balanceOf(account1.address);
       expect(balance).to.equal(1);
+    });
+  });
+
+  describe("Update", function () {
+    it("Update Domains Contract", async function () {
+      // delpoy contract
+      const {domains, forwarder, account1, account2} = await deployContract();
+
+      // upgrade contract
+      const domainsV2 = await upgradeContract(
+        domains.target as string,
+        forwarder.target as string
+      );
+
+      // call new function
+      const datas = [
+        {
+          to: account1.address,
+          name: "haruki",
+          year: 2,
+        },
+        {
+          to: account2.address,
+          name: "haruki2",
+          year: 2,
+        },
+      ];
+
+      // get price
+      const price = await domains.price("haruki", 2);
+      const price2 = await domains.price("haruki2", 2);
+
+      const txn = await domainsV2.connect(account1).batchRegister(datas, {
+        value: ethers.parseEther(await ethers.formatEther(price + price2)),
+      });
+      await txn.wait();
+
+      const domainOwner = await domainsV2.domains("haruki");
+      expect(domainOwner).to.equal(account1.address);
     });
   });
 });
