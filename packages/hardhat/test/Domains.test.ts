@@ -10,10 +10,8 @@ import {
 } from "../typechain-types";
 
 describe("Domains", function () {
-  // We define a fixture to reuse the same setup in every test.
-
   /**
-   * WakuWakuGame, NFT, Mock ERC20 token deploy function
+   * deploy Contract function
    * @returns
    */
   async function deployContract() {

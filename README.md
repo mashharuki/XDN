@@ -26,6 +26,12 @@ The CrossValueChain Domain is minted as NFT(ERC721).
   yarn test
   ```
 
+- compile contract
+
+  ```bash
+  yarn hardhat:compile
+  ```
+
 - deploy to kura
 
   ```bash
