@@ -19,9 +19,7 @@ const Domains: NextPage = () => {
   const contractNames = Object.keys(contractsData) as ContractName[];
 
   // get contractData
-  const { data: cdhContractData } = useDeployedContractInfo(contractNames[3]);
   const { data: deployedContractData } = useDeployedContractInfo(contractNames[0]);
-  const { data: nftMarketContractData } = useDeployedContractInfo(contractNames[1]);
 
   /**
    * プルダウンで選択した時に変更する。
@@ -48,14 +46,9 @@ const Domains: NextPage = () => {
             </select>
           </div>
         </div>
-        {deployedContractData != undefined && cdhContractData != undefined && (
+        {deployedContractData != undefined && (
           <div className="w-full justify-center">
-            <DomainCards
-              deployedContractData={deployedContractData}
-              cdhContractData={cdhContractData}
-              nftMarketContractData={nftMarketContractData}
-              filter={filter}
-            />
+            <DomainCards deployedContractData={deployedContractData} filter={filter} />
           </div>
         )}
       </div>

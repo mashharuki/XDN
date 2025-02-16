@@ -13,9 +13,7 @@ import { getBlockExplorerAddressLink, getBlockExplorerTokenLink } from "~~/utils
 type DomainCardPorps = {
   id: number;
   name: string;
-  cdhContractData?: any;
   deployedContractData?: any;
-  nftMarketContractData?: any;
   filter: string;
 };
 
@@ -91,45 +89,6 @@ export const DomainCard = (porps: DomainCardPorps) => {
     const lastThree = str.slice(-3);
     return firstThree + "..." + lastThree;
   };
-
-  /**
-   * listItem method
-  const listItem = async () => {
-    try {
-      const result = await writeContractAsync({
-        address: porps.nftMarketContractData.address,
-        functionName: "listItem",
-        abi: porps.nftMarketContractData.abi,
-        args: [porps.id],
-      });
-
-      console.log("result:", result);
-
-      toast.success("🦄 Success!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } catch (err: any) {
-      console.error("err:", err);
-      toast.error("Failed....", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  */
 
   /**
    * checkExpirationDate
@@ -232,15 +191,6 @@ export const DomainCard = (porps: DomainCardPorps) => {
                       <strong>expirationDate: {expirationDate}</strong>
                     </p>
                   </div>
-                  <p>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href={getBlockExplorerAddressLink(targetNetwork, porps.cdhContractData.address as any)}
-                    >
-                      Check Your CDH
-                    </a>
-                  </p>
                   <button
                     onClick={() => setIsOpen(true)}
                     className="absolute bottom-4 right-3 bg-white text-blue-500 rounded-full p-2 shadow-lg hover:bg-gray-200 transition-colors"

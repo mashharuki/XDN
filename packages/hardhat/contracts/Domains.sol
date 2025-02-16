@@ -289,6 +289,7 @@ contract Domains is ERC721URIStorage, ERC2771Context {
       // NFTマーケットプレイスにdetachする。
       detach(tokenId);
       string memory expiredDomain = names[tokenId];
+      // 登録データを削除する。
       delete domains[expiredDomain];
       delete names[tokenId];
       delete expirationDates[tokenId];
@@ -330,6 +331,7 @@ contract Domains is ERC721URIStorage, ERC2771Context {
 
   /**
    * ドメインの長さが適切かチェックするためのメソッド
+   * 3文字以上10文字以下であることを確認する。
    */
   function valid(string calldata name) private pure returns (bool) {
     return StringUtils.strlen(name) >= 3 && StringUtils.strlen(name) <= 10;

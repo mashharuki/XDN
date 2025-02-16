@@ -17,12 +17,7 @@ type ContractUIProps = {
  * DomainCards Components
  * @returns
  */
-export const DomainCards = ({
-  deployedContractData,
-  cdhContractData,
-  nftMarketContractData,
-  filter,
-}: ContractUIProps) => {
+export const DomainCards = ({ deployedContractData, filter }: ContractUIProps) => {
   const { targetNetwork } = useTargetNetwork();
 
   const { data: names, refetch } = useReadContract({
@@ -46,14 +41,7 @@ export const DomainCards = ({
         {names.map((name: any, index: number) => {
           return (
             <div className="" key={index}>
-              <DomainCard
-                id={index}
-                name={name}
-                deployedContractData={deployedContractData}
-                cdhContractData={cdhContractData}
-                nftMarketContractData={nftMarketContractData}
-                filter={filter}
-              />
+              <DomainCard id={index} name={name} deployedContractData={deployedContractData} filter={filter} />
             </div>
           );
         })}
