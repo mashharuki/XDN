@@ -1,13 +1,9 @@
 import {HardhatEthersSigner} from "@nomicfoundation/hardhat-ethers/signers";
 import {time} from "@nomicfoundation/hardhat-network-helpers";
 import {expect} from "chai";
-import {ethers} from "hardhat";
+import {ethers, upgrades} from "hardhat";
 import {ForwardRequest} from "../lib/types";
-import {
-  Domains,
-  SampleForwarder,
-  SampleForwarder__factory,
-} from "../typechain-types";
+import {SampleForwarder, SampleForwarder__factory} from "../typechain-types";
 
 describe("Domains", function () {
   /**
@@ -23,15 +19,23 @@ describe("Domains", function () {
     const SampleForwarder: SampleForwarder__factory =
       await ethers.getContractFactory("SampleForwarder");
     const forwarder: SampleForwarder = await SampleForwarder.deploy();
+    // console.log(`Forwarder Contract is deployed: ${forwarder.target}`);
     await forwarder.waitForDeployment();
-    // deploy contract
+    // deploy Domains contract via upgradeable proxy contract
     const Domains = await ethers.getContractFactory("Domains");
-    const domains: Domains = await Domains.deploy(
-      "xcr",
-      forwarder.target,
-      account1.address
+    // deploy
+    const domains = await upgrades.deployProxy(
+      Domains,
+      ["xenea", account1.address as `0x${string}`],
+      {
+        initializer: "initialize",
+        constructorArgs: [forwarder.target],
+      }
     );
     await domains.waitForDeployment();
+
+    // console.log(`Domains Contract is deployed: ${domains.target}`);
+
     return {domains, forwarder, account1, account2};
   }
 
@@ -55,6 +59,7 @@ describe("Domains", function () {
   describe("Deployment", function () {
     it("Should have the right balance on deploy", async function () {
       const {domains} = await deployContract();
+
       const balance = await ethers.provider.getBalance(domains.target);
       const currentBalance = ethers.formatEther(balance);
       expect(currentBalance).to.equal("0.0");

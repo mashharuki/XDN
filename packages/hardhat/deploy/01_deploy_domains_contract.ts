@@ -1,4 +1,5 @@
 import {Contract} from "ethers";
+import {ethers, upgrades} from "hardhat";
 import {DeployFunction} from "hardhat-deploy/types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {writeContractAddress} from "../helper/contractsJsonHelper";
@@ -31,19 +32,14 @@ const deployDomainsContract: DeployFunction = async function (
   const tld = "xenea";
 
   // deploy Domains contract via upgradeable proxy contact
-  //const Domains = await ethers.getContractFactory("Domains");
-
-  await deploy("Domains", {
-    from: deployer,
-    args: [tld, await forwarder.getAddress(), deployer],
-    log: true,
-    autoMine: true,
+  const Domains = await ethers.getContractFactory("Domains");
+  // deploy
+  const domains = await upgrades.deployProxy(Domains, [tld, deployer], {
+    initializer: "initialize",
+    constructorArgs: [forwarder.target],
   });
 
-  // Get the deployed contract to interact with it after deploying.
-  const domains = await hre.ethers.getContract<Contract>("Domains", deployer);
-
-  console.log(`Domains Contract is deployed: ${await domains.getAddress()}`);
+  console.log(`Domains Contract is deployed: ${domains.target}`);
 
   // write Contract Address
   writeContractAddress({
