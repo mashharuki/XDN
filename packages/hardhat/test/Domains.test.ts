@@ -1,10 +1,10 @@
 import {HardhatEthersSigner} from "@nomicfoundation/hardhat-ethers/signers";
 import {time} from "@nomicfoundation/hardhat-network-helpers";
 import {expect} from "chai";
-import {ethers} from "hardhat";
+import {ethers, upgrades} from "hardhat";
 import {ForwardRequest} from "../lib/types";
 import {
-  Domains,
+  DomainsV2,
   SampleForwarder,
   SampleForwarder__factory,
 } from "../typechain-types";
@@ -23,17 +23,42 @@ describe("Domains", function () {
     const SampleForwarder: SampleForwarder__factory =
       await ethers.getContractFactory("SampleForwarder");
     const forwarder: SampleForwarder = await SampleForwarder.deploy();
+    // console.log(`Forwarder Contract is deployed: ${forwarder.target}`);
     await forwarder.waitForDeployment();
-    // deploy contract
+    // deploy Domains contract via upgradeable proxy contract
     const Domains = await ethers.getContractFactory("Domains");
-    const domains: Domains = await Domains.deploy(
-      "xcr",
-      forwarder.target,
-      account1.address
+    // deploy
+    const domains = await upgrades.deployProxy(
+      Domains,
+      ["xenea", account1.address as `0x${string}`],
+      {
+        initializer: "initialize",
+        constructorArgs: [forwarder.target],
+      }
     );
     await domains.waitForDeployment();
+
+    // console.log(`Domains Contract is deployed: ${domains.target}`);
+
     return {domains, forwarder, account1, account2};
   }
+
+  /**
+   * upgrade Domains contract function
+   */
+  const upgradeContract = async (
+    proxyAddress: string,
+    forwarderAddress: string
+  ) => {
+    // get new contract factory
+    const DomainsV2 = await ethers.getContractFactory("DomainsV2");
+    // update contract via proxy
+    const domainV2 = await upgrades.upgradeProxy(proxyAddress, DomainsV2, {
+      constructorArgs: [forwarderAddress],
+    });
+
+    return domainV2 as DomainsV2;
+  };
 
   /**
    * タイプスタンプをyyyy/mm/dd形式に変換するメソッド
@@ -55,6 +80,7 @@ describe("Domains", function () {
   describe("Deployment", function () {
     it("Should have the right balance on deploy", async function () {
       const {domains} = await deployContract();
+
       const balance = await ethers.provider.getBalance(domains.target);
       const currentBalance = ethers.formatEther(balance);
       expect(currentBalance).to.equal("0.0");
@@ -77,11 +103,17 @@ describe("Domains", function () {
       const {domains, account1} = await deployContract();
       // priceを取得
       const price = await domains.price("haruki", 2);
-      const txn = await domains
-        .connect(account1)
-        .register(account1.address, "haruki", 2, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
+
+      // register data
+      const data = {
+        to: account1.address,
+        name: "haruki",
+        year: 2,
+      };
+
+      const txn = await domains.connect(account1).register(data, {
+        value: ethers.parseEther(await ethers.formatEther(price)),
+      });
       await txn.wait();
 
       const domainOwner = await domains.domains("haruki");
@@ -96,18 +128,32 @@ describe("Domains", function () {
       const {domains, account1, account2} = await deployContract();
       // priceを取得
       const price = await domains.price("haruki2", 2);
-      const txn = await domains.register(account1.address, "haruki2", 2, {
+
+      // register data
+      const data = {
+        to: account1.address,
+        name: "haruki2",
+        year: 2,
+      };
+
+      const txn = await domains.register(data, {
         value: ethers.parseEther(await ethers.formatEther(price)),
       });
       await txn.wait();
 
       // priceを取得
       const price2 = await domains.price("haruki3", 2);
-      const txn2 = await domains
-        .connect(account2)
-        .register(account2.address, "haruki3", 2, {
-          value: ethers.parseEther(await ethers.formatEther(price2)),
-        });
+
+      // register data
+      const data2 = {
+        to: account2.address,
+        name: "haruki3",
+        year: 2,
+      };
+
+      const txn2 = await domains.connect(account2).register(data2, {
+        value: ethers.parseEther(await ethers.formatEther(price2)),
+      });
       await txn2.wait();
 
       const domainOwner = await domains.domains("haruki3");
@@ -122,14 +168,30 @@ describe("Domains", function () {
       const {domains, account1} = await deployContract();
       // priceを取得
       const price = await domains.price("haruki2", 2);
-      const txn = await domains.register(account1.address, "haruki2", 2, {
+
+      // register data
+      const data3 = {
+        to: account1.address,
+        name: "haruki2",
+        year: 2,
+      };
+
+      const txn = await domains.register(data3, {
         value: ethers.parseEther(await ethers.formatEther(price)),
       });
       await txn.wait();
 
       // priceを取得
       const price2 = await domains.price("haruki3", 2);
-      const txn2 = await domains.register(account1.address, "haruki3", 2, {
+
+      // register data
+      const data4 = {
+        to: account1.address,
+        name: "haruki3",
+        year: 2,
+      };
+
+      const txn2 = await domains.register(data4, {
         value: ethers.parseEther(await ethers.formatEther(price2)),
       });
       await txn2.wait();
@@ -145,11 +207,17 @@ describe("Domains", function () {
       const {domains, account1} = await deployContract();
       // priceを取得
       const price = await domains.price("haruki4", 2);
-      const txn = await domains
-        .connect(account1)
-        .register(account1.address, "haruki4", 2, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
+
+      // register data
+      const data5 = {
+        to: account1.address,
+        name: "haruki4",
+        year: 2,
+      };
+
+      const txn = await domains.connect(account1).register(data5, {
+        value: ethers.parseEther(await ethers.formatEther(price)),
+      });
       await txn.wait();
 
       const domainOwner = await domains.domains("haruki4");
@@ -174,11 +242,17 @@ describe("Domains", function () {
     it("Should burn domain after expiration", async function () {
       const {domains, account1} = await deployContract();
       const price = await domains.price("expire", 1);
-      const txn = await domains
-        .connect(account1)
-        .register(account1, "expire", 1, {
-          value: ethers.parseEther(await ethers.formatEther(price)),
-        });
+
+      // register data
+      const data = {
+        to: account1.address,
+        name: "expire",
+        year: 1,
+      };
+
+      const txn = await domains.connect(account1).register(data, {
+        value: ethers.parseEther(await ethers.formatEther(price)),
+      });
       await txn.wait();
 
       const domainOwner = await domains.domains("expire");
@@ -199,9 +273,11 @@ describe("Domains", function () {
       const {domains, forwarder, account1, account2} = await deployContract();
       // create encode function data
       const data = domains.interface.encodeFunctionData("register", [
-        account1.address,
-        "haruki5",
-        2,
+        {
+          to: account1.address,
+          name: "haruki5",
+          year: 2,
+        },
       ]);
 
       // get price
@@ -249,7 +325,7 @@ describe("Domains", function () {
         signature: signature,
       };
 
-      console.log("uint48Time:", uint48Time);
+      // console.log("uint48Time:", uint48Time);
 
       // オフチェーンで署名が合っているか確認する。
       const expectedSigner = ethers.verifyTypedData(
@@ -280,7 +356,7 @@ describe("Domains", function () {
       const verifyReslut = await forwarder.verify(request);
       expect(verifyReslut).to.equal(true);
 
-      console.log("request:", request);
+      // console.log("request:", request);
 
       // Fund the Forwarder contract with 0.001 ETH from account1
       await account1.sendTransaction({
@@ -299,6 +375,45 @@ describe("Domains", function () {
       // Check the balance of account1 to ensure the NFT was minted
       const balance = await domains.balanceOf(account1.address);
       expect(balance).to.equal(1);
+    });
+  });
+
+  describe("Update", function () {
+    it("Update Domains Contract", async function () {
+      // delpoy contract
+      const {domains, forwarder, account1, account2} = await deployContract();
+
+      // upgrade contract
+      const domainsV2 = await upgradeContract(
+        domains.target as string,
+        forwarder.target as string
+      );
+
+      // call new function
+      const datas = [
+        {
+          to: account1.address,
+          name: "haruki",
+          year: 2,
+        },
+        {
+          to: account2.address,
+          name: "haruki2",
+          year: 2,
+        },
+      ];
+
+      // get price
+      const price = await domains.price("haruki", 2);
+      const price2 = await domains.price("haruki2", 2);
+
+      const txn = await domainsV2.connect(account1).batchRegister(datas, {
+        value: ethers.parseEther(await ethers.formatEther(price + price2)),
+      });
+      await txn.wait();
+
+      const domainOwner = await domainsV2.domains("haruki");
+      expect(domainOwner).to.equal(account1.address);
     });
   });
 });

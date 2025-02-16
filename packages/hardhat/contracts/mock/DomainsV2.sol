@@ -2,8 +2,8 @@
 pragma solidity >=0.8.19;
 
 import "hardhat/console.sol";
-import {StringUtils} from "./lib/StringUtils.sol";
-import {Base64} from "./lib/Base64.sol";
+import {StringUtils} from "./../lib/StringUtils.sol";
+import {Base64} from "./../lib/Base64.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -13,7 +13,7 @@ import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol
 /**
  * Domains Cotract
  */
-contract Domains is
+contract DomainsV2 is
   Initializable,
   ERC721URIStorageUpgradeable,
   OwnableUpgradeable,
@@ -395,5 +395,19 @@ contract Domains is
   {
     // Custom implementation or logic to resolve conflict
     return super._contextSuffixLength();
+  }
+
+  // ==========================================================================================
+  // ======================================= V2 methods =======================================
+  // ==========================================================================================
+
+  /**
+   * batch register
+   */
+  function batchRegister(RegistData[] calldata datas) public payable onlyOwner {
+    for (uint i = 0; i < datas.length; i++) {
+      // call register method
+      register(datas[i]);
+    }
   }
 }

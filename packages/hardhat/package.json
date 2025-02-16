@@ -57,6 +57,8 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.1",
+    "@openzeppelin/contracts-upgradeable": "5.0.1",
+    "@openzeppelin/hardhat-upgrades": "^3.9.0",
     "@typechain/ethers-v6": "^0.5.1",
     "dotenv": "^16.0.3",
     "envfile": "^6.18.0",
