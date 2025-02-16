@@ -31,6 +31,13 @@ contract Domains is
   // トップレベルドメイン(TLD)
   string public tld;
 
+  // registData
+  struct RegistData {
+    address to;
+    string name;
+    uint256 year;
+  }
+
   // ドメインとアドレスを紐づけるmap
   mapping(string => address) public domains;
   // ENSとURL等のデータを紐づけるmap
@@ -120,27 +127,21 @@ contract Domains is
 
   /**
    * ドメインを登録するためのメソッド
-   * @param to 発行先アドレス
-   * @param name ドメイン名
-   * @param _years 所有期間(年単位)
+   * @param data ドメイン登録データ
    */
-  function register(
-    address to,
-    string calldata name,
-    uint256 _years
-  ) public payable {
+  function register(RegistData calldata data) public payable {
     // そのドメインがまだ登録されていないか確認します。
-    if (domains[name] != address(0)) revert AlreadyRegistered();
+    if (domains[data.name] != address(0)) revert AlreadyRegistered();
     // 適切な長さであるかチェックする。
-    if (!valid(name)) revert InvalidName(name);
+    if (!valid(data.name)) revert InvalidName(data.name);
 
     // ドメイン名のミントに必要な金額を算出する。
-    uint _price = price(name, _years);
+    uint _price = price(data.name, data.year);
     // 十分な残高を保有しているかどうかチェックする。
     require(msg.value >= _price, "Not enough XCR paid");
 
     // ネームとTLD(トップレベルドメイン)を結合する。
-    string memory _name = string(abi.encodePacked(name, ".", tld));
+    string memory _name = string(abi.encodePacked(data.name, ".", tld));
     // NFT用にSVGイメージを作成します。
     string memory finalSvg = string(
       abi.encodePacked(svgPartOne, _name, svgPartTwo)
@@ -148,7 +149,7 @@ contract Domains is
     //　現在のトークンIDを取得する。
     uint256 newRecordId = _tokenIdCounter;
     // 長さを取得する。
-    uint256 length = StringUtils.strlen(name);
+    uint256 length = StringUtils.strlen(data.name);
     string memory strLen = Strings.toString(length);
 
     // SVGのデータをBase64の形式でエンコードする。
@@ -169,21 +170,21 @@ contract Domains is
     );
 
     // NFTとして発行する。
-    _safeMint(to, newRecordId);
+    _safeMint(data.to, newRecordId);
     // トークンURI情報を登録する。
     _setTokenURI(newRecordId, finalTokenUri);
 
     // 登録する。
-    domains[name] = to;
+    domains[data.name] = data.to;
     // namesにも登録する。
-    names[newRecordId] = name;
+    names[newRecordId] = data.name;
     // 所有者のドメインリストに追加する。
-    ownerDomains[to].push(name);
+    ownerDomains[data.to].push(data.name);
     // 有効期限を設定する。
-    expirationDates[newRecordId] = block.timestamp + (_years * 365 days);
+    expirationDates[newRecordId] = block.timestamp + (data.year * 365 days);
 
     _tokenIdCounter += 1;
-    emit Register(to, name);
+    emit Register(data.to, data.name);
 
     // 金額の半分をrelayerに送金する。
     (bool success, ) = msg.sender.call{value: (msg.value / 2)}("");
