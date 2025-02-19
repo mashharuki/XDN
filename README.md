@@ -1,5 +1,7 @@
 # 🏗 Xenea Domain Name Service (XDN)
 
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/cdn-nextjs)
+
 [![Lint & Test Smart Contracts](https://github.com/mashharuki/CDN/actions/workflows/lint.yaml/badge.svg)](https://github.com/mashharuki/CDN/actions/workflows/lint.yaml)
 
 ![](./docs/banner.png)
