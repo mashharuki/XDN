@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { formatEther } from "viem";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { POST } from "~~/app/api/requestRelayer/route";
-import Loading from "~~/components/Loading";
+import Loading from "~~/components/common/Loading";
 import { useEthersSigner } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { RPC_URL } from "~~/utils/constants";

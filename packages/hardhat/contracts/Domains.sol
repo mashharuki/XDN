@@ -126,19 +126,14 @@ contract Domains is
   }
 
   /**
-   * ドメインを登録するためのメソッド
+   * ドメインを発行する実処理用のメソッド
    * @param data ドメイン登録データ
    */
-  function register(RegistData calldata data) public payable {
+  function mintDomain(RegistData calldata data) internal {
     // そのドメインがまだ登録されていないか確認します。
     if (domains[data.name] != address(0)) revert AlreadyRegistered();
     // 適切な長さであるかチェックする。
     if (!valid(data.name)) revert InvalidName(data.name);
-
-    // ドメイン名のミントに必要な金額を算出する。
-    uint _price = price(data.name, data.year);
-    // 十分な残高を保有しているかどうかチェックする。
-    require(msg.value >= _price, "Not enough XCR paid");
 
     // ネームとTLD(トップレベルドメイン)を結合する。
     string memory _name = string(abi.encodePacked(data.name, ".", tld));
@@ -185,6 +180,20 @@ contract Domains is
 
     _tokenIdCounter += 1;
     emit Register(data.to, data.name);
+  }
+
+  /**
+   * ドメインを登録するためのメソッド
+   * @param data ドメイン登録データ
+   */
+  function register(RegistData calldata data) public payable {
+    // ドメイン名のミントに必要な金額を算出する。
+    uint _price = price(data.name, data.year);
+    // 十分な残高を保有しているかどうかチェックする。
+    require(msg.value >= _price, "Not enough XCR paid");
+
+    // call mintDomain function
+    mintDomain(data);
 
     // 金額の半分をrelayerに送金する。
     (bool success, ) = msg.sender.call{value: (msg.value / 2)}("");
