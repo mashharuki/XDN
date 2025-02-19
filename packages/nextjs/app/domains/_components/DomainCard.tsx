@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { PencilIcon } from "@heroicons/react/24/outline";
-import Modal from "~~/components/Modal";
+import Modal from "~~/components/xdn/Modal";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { formatUnixTimestampBigInt } from "~~/utils/helper";
 import { getBlockExplorerAddressLink, getBlockExplorerTokenLink } from "~~/utils/scaffold-eth";

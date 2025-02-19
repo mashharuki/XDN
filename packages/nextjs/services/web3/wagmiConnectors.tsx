@@ -1,12 +1,5 @@
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
-import {
-  coinbaseWallet,
-  ledgerWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  safeWallet,
-  walletConnectWallet,
-} from "@rainbow-me/rainbowkit/wallets";
+import { metaMaskWallet, rainbowWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets";
 import { rainbowkitBurnerWallet } from "burner-connector";
 import { intmaxwalletsdk } from "intmax-walletsdk/rainbowkit";
 import * as chains from "viem/chains";
@@ -17,50 +10,23 @@ const { onlyLocalBurnerWallet, targetNetworks } = scaffoldConfig;
 const additionalWallets = [
   intmaxwalletsdk({
     wallet: {
-      url: "https://intmaxwallet-sdk-wallet.vercel.app/",
-      name: "IntmaxWallet",
-      iconUrl: "https://intmaxwallet-sdk-wallet.vercel.app/vite.svg",
-    },
-    metadata: {
-      name: "Xenea DomainNameService",
-      description: "Xenea DomainNameService",
-      icons: ["https://intmaxwallet-sdk-wallet.vercel.app/vite.svg"],
-    },
-  }),
-  intmaxwalletsdk({
-    mode: "iframe",
-    wallet: {
-      url: "https://intmaxwallet-sdk-wallet.vercel.app/",
-      name: "IntmaxWallet",
-      iconUrl: "https://intmaxwallet-sdk-wallet.vercel.app/vite.svg",
-    },
-    metadata: {
-      name: "Xenea DomainNameService",
-      description: "Xenea DomainNameService",
-      icons: ["https://intmaxwallet-sdk-wallet.vercel.app/vite.svg"],
-    },
-  }),
-  intmaxwalletsdk({
-    wallet: {
       url: "https://wallet.intmax.io",
       name: "INTMAX Wallet",
       iconUrl: "https://wallet.intmax.io/favicon.ico",
     },
     metadata: {
-      name: "Xenea DomainNameService",
-      description: "Xenea DomainNameService",
-      icons: ["https://intmaxwallet-sdk-wallet.vercel.app/vite.svg"],
+      name: "INTMAX Wallet",
+      description: "INTMAX Wallet",
+      icons: ["https://wallet.intmax.io/favicon.ico"],
     },
   }),
 ];
 
+// Wallets
 const wallets = [
   metaMaskWallet,
   walletConnectWallet,
-  ledgerWallet,
-  coinbaseWallet,
   rainbowWallet,
-  safeWallet,
   ...(!targetNetworks.some(network => network.id !== (chains.hardhat as chains.Chain).id) || !onlyLocalBurnerWallet
     ? [rainbowkitBurnerWallet]
     : []),
@@ -72,17 +38,16 @@ const wallets = [
 export const wagmiConnectors = connectorsForWallets(
   [
     {
-      groupName: "Supported Wallets",
-      wallets,
-    },
-    {
       groupName: "IntmaxWallet",
       wallets: additionalWallets,
     },
+    {
+      groupName: "Other Wallets",
+      wallets,
+    },
   ],
-
   {
-    appName: "scaffold-eth-2",
+    appName: "Xenea Domain Name Service",
     projectId: scaffoldConfig.walletConnectProjectId,
   },
 );

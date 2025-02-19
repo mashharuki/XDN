@@ -403,17 +403,14 @@ describe("Domains", function () {
         },
       ];
 
-      // get price
-      const price = await domains.price("haruki", 2);
-      const price2 = await domains.price("haruki2", 2);
-
-      const txn = await domainsV2.connect(account1).batchRegister(datas, {
-        value: ethers.parseEther(await ethers.formatEther(price + price2)),
-      });
+      const txn = await domainsV2.connect(account1).batchRegister(datas);
       await txn.wait();
 
       const domainOwner = await domainsV2.domains("haruki");
       expect(domainOwner).to.equal(account1.address);
+
+      const domainOwner2 = await domainsV2.domains("haruki2");
+      expect(domainOwner2).to.equal(account2.address);
     });
   });
 });

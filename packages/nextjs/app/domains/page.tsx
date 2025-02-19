@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { DomainCards } from "./_components/DomainCards";
 import type { NextPage } from "next";
-import Toaster from "~~/components/Toaster";
+import Toaster from "~~/components/common/Toaster";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";
