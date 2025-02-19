@@ -163,7 +163,7 @@ export const DomainCard = (porps: DomainCardPorps) => {
               <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
                 <div className="card w-96 text-primary-content m-2 bg-gradient-to-r from-blue-500 via-orange-500 to-pink-500 text-white p-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">
                   <div className="card-body">
-                    <h2 className="card-title">{porps.name}.xcr</h2>
+                    <h2 className="card-title">{porps.name}.xenea</h2>
                     <h5>
                       <a
                         className="underline"
@@ -219,7 +219,7 @@ export const DomainCard = (porps: DomainCardPorps) => {
         {record != undefined && owner != undefined && (
           <div className="card w-96 text-primary-content m-2 bg-gradient-to-r from-blue-500 via-orange-500 to-pink-500 text-white p-5 rounded-lg shadow-lg transition-transform transform hover:scale-105">
             <div className="card-body">
-              <h2 className="card-title">{porps.name}.xcr</h2>
+              <h2 className="card-title">{porps.name}.xenea</h2>
               <h5>
                 ID:{" "}
                 <a
