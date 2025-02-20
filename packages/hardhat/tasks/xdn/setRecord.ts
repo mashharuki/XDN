@@ -1,9 +1,11 @@
 import "dotenv/config";
-import { task } from "hardhat/config";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { loadDeployedContractAddresses } from "../helper/contractsJsonHelper";
+import {task} from "hardhat/config";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
-task("withdraw", "withdraw all tokens from Domains Contract")
+task("setRecord", "set record to domains contract")
+  .addParam("name", "register name")
+  .addParam("record", "record data for setting")
   .setAction(async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
     console.log(
       "===================================== [START] ===================================== "
@@ -15,10 +17,14 @@ task("withdraw", "withdraw all tokens from Domains Contract")
     // create Domains contract
     const domains = await hre.ethers.getContractAt("Domains", Domains);
 
+    // 変数
+    const name = taskArgs.name;
+    const record = taskArgs.record;
+
     try {
-      // check price
-      const tx = await domains.withdraw();
-      console.log(`TX Hash: ${tx.hash}`);
+      // create game
+      const tx = await domains.setRecord(name, record);
+      console.log("tx Hash:", tx.hash);
       console.log(
         "===================================== [END] ===================================== "
       );

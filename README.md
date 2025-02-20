@@ -8,13 +8,15 @@
 
 ---
 
-## What it does
+## About XDN
 
-The CrossValueChain Domain Name Service simplifies the ethereal address, which is a long string of alphanumeric characters starting with "0x," to make it easier to remember and simpler to use as a string of characters(like ENS).
+The Xenea Domain Name Service simplifies the ethereal address, which is a long string of alphanumeric characters starting with "0x," to make it easier to remember and simpler to use as a string of characters(like **ENS**).
 
-The CrossValueChain Domain is minted as NFT(ERC721).
+The Xenea Domain is minted as NFT(ERC721).
 
 ## how to work
+
+### Contract
 
 - setup
 
@@ -82,6 +84,8 @@ The CrossValueChain Domain is minted as NFT(ERC721).
   yarn hardhat:checkRegistered --name cdn --network kura
   ```
 
+### Frontend
+
 - build Frontend
 
   ```bash
@@ -93,6 +97,8 @@ The CrossValueChain Domain is minted as NFT(ERC721).
   ```bash
   yarn start
   ```
+
+### CDK
 
 - deploy CDK Stack
 

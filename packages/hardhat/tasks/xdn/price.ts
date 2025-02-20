@@ -1,15 +1,14 @@
 import "dotenv/config";
-import { task } from "hardhat/config";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { loadDeployedContractAddresses } from "../helper/contractsJsonHelper";
+import {task} from "hardhat/config";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
-task("getTokenURI", "get tokenURI of id")
-  .addParam("tokenid", "tokenId")
+task("price", "check price new domain")
+  .addParam("name", "check price name")
   .setAction(async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
     console.log(
       "===================================== [START] ===================================== "
     );
-    
     // get Contract Address
     const {
       contracts: {Domains},
@@ -18,12 +17,16 @@ task("getTokenURI", "get tokenURI of id")
     const domains = await hre.ethers.getContractAt("Domains", Domains);
 
     // 変数
-    const tokenId = taskArgs.tokenid;
+    const name = taskArgs.name;
 
     try {
-      // get tokenURI
-      const result = await domains.tokenURI(tokenId);
-      console.log(`TokenID ${tokenId}'s tokenURI: ${result}`);
+      // check price
+      const result = await domains.price(name);
+      console.log(
+        `${taskArgs.name}'s price: ${hre.ethers.formatEther(
+          result.toString()
+        )} ETH`
+      );
       console.log(
         "===================================== [END] ===================================== "
       );

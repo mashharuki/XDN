@@ -1,10 +1,10 @@
 import "dotenv/config";
-import { task } from "hardhat/config";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { loadDeployedContractAddresses } from "../helper/contractsJsonHelper";
+import {task} from "hardhat/config";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
-task("price", "check price new domain")
-  .addParam("name", "check price name")
+task("checkRegistered", "check domain name already registered")
+  .addParam("name", "check domain name")
   .setAction(async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
     console.log(
       "===================================== [START] ===================================== "
@@ -21,8 +21,8 @@ task("price", "check price new domain")
 
     try {
       // check price
-      const result = await domains.price(name);
-      console.log(`${taskArgs.name}'s price: ${hre.ethers.formatEther(result.toString())} ETH`);
+      const result = await domains.checkRegistered(name);
+      console.log(result);
       console.log(
         "===================================== [END] ===================================== "
       );

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { DomainCards } from "./_components/DomainCards";
 import type { NextPage } from "next";
 import Toaster from "~~/components/common/Toaster";
+import { DomainCards } from "~~/components/xdn/DomainCards";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
 import { getAllContracts } from "~~/utils/scaffold-eth/contractsData";

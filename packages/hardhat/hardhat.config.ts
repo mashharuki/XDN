@@ -25,7 +25,7 @@ const etherscanApiKey =
 
 const SKIP_LOAD = process.env.SKIP_LOAD === "true";
 if (!SKIP_LOAD) {
-  const taskPaths = [""];
+  const taskPaths = ["", "utils", "xdn", "upgrade"];
   taskPaths.forEach((folder) => {
     const tasksPath = path.join(__dirname, "tasks", folder);
     fs.readdirSync(tasksPath)

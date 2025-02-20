@@ -1,11 +1,10 @@
 import "dotenv/config";
-import { task } from "hardhat/config";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { loadDeployedContractAddresses } from "../helper/contractsJsonHelper";
+import {task} from "hardhat/config";
+import {HardhatRuntimeEnvironment} from "hardhat/types";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
-task("checkRegistered", "check domain name already registered")
-  .addParam("name", "check domain name")
-  .setAction(async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
+task("withdraw", "withdraw all tokens from Domains Contract").setAction(
+  async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
     console.log(
       "===================================== [START] ===================================== "
     );
@@ -16,17 +15,15 @@ task("checkRegistered", "check domain name already registered")
     // create Domains contract
     const domains = await hre.ethers.getContractAt("Domains", Domains);
 
-    // 変数
-    const name = taskArgs.name;
-
     try {
       // check price
-      const result = await domains.checkRegistered(name);
-      console.log(result);
+      const tx = await domains.withdraw();
+      console.log(`TX Hash: ${tx.hash}`);
       console.log(
         "===================================== [END] ===================================== "
       );
     } catch (e) {
       console.error("err:", e);
     }
-  });
+  }
+);

@@ -300,8 +300,6 @@ contract DomainsV2 is
   function checkExpiration(uint256 tokenId) public returns (bool) {
     // 有効期限を過ぎていた場合はburnする。
     if (block.timestamp > expirationDates[tokenId]) {
-      // NFTマーケットプレイスにdetachする。
-      detach(tokenId);
       string memory expiredDomain = names[tokenId];
       // 登録データを削除する。
       delete domains[expiredDomain];
@@ -312,34 +310,6 @@ contract DomainsV2 is
       return true;
     } else {
       return false;
-    }
-  }
-
-  /**
-   * ドメイン所有権を別のアドレスに移行するメソッド
-   * @param tokenId トークンID
-   */
-  function detach(uint256 tokenId) internal {
-    // トランザクションの送信者が所有者であることを確認する。
-    require(
-      msg.sender == ownerOf(tokenId),
-      "Only the owner can detach the domain"
-    );
-
-    // ドメイン名を取得する。
-    string memory domainName = names[tokenId];
-
-    // 現在の所有者のドメインリストからドメインを削除する。
-    string[] storage ownerDomainList = ownerDomains[msg.sender];
-
-    for (uint i = 0; i < ownerDomainList.length; i++) {
-      if (
-        keccak256(bytes(ownerDomainList[i])) == keccak256(bytes(domainName))
-      ) {
-        ownerDomainList[i] = ownerDomainList[ownerDomainList.length - 1];
-        ownerDomainList.pop();
-        break;
-      }
     }
   }
 

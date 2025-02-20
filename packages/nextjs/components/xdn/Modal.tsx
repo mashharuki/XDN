@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Contract, ethers } from "ethers";
 import { toast } from "react-toastify";
-import { useWriteContract } from "wagmi";
 import { POST } from "~~/app/api/requestRelayer/route";
 import { useDeployedContractInfo, useEthersSigner } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
@@ -29,11 +28,8 @@ const Modal = (props: ModalProps) => {
   const contractNames = Object.keys(contractsData) as ContractName[];
   const [newRecord, setNewRecord] = useState("");
 
-  const {} = useWriteContract();
   const { targetNetwork } = useTargetNetwork();
-
-  const { data: SampleForwarderContractData } = useDeployedContractInfo(contractNames[2]);
-
+  const { data: SampleForwarderContractData } = useDeployedContractInfo(contractNames[1]);
   // get signer object
   const signer = useEthersSigner({ chainId: targetNetwork.id });
 
