@@ -1,8 +1,8 @@
 import "dotenv/config";
 import {task} from "hardhat/config";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {loadDeployedContractAddresses} from "../helper/contractsJsonHelper";
-import {ForwardRequest} from "../lib/types";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
+import {ForwardRequest} from "../../lib/types";
 
 const {RELAYER_PRIVATE_KEY} = process.env;
 

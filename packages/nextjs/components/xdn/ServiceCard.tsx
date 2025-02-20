@@ -5,11 +5,12 @@ import { Contract, ethers } from "ethers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { formatEther } from "viem";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import { POST } from "~~/app/api/requestRelayer/route";
 import Loading from "~~/components/common/Loading";
 import { useEthersSigner } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useCheckRegistered, usePrice } from "~~/hooks/xdn";
 import { RPC_URL } from "~~/utils/constants";
 import { getUint48 } from "~~/utils/helper";
 import { ForwardRequest } from "~~/utils/types";
@@ -25,7 +26,7 @@ type ContractUIProps = {
  */
 export const ServiceCard = ({ deployedContractData, SampleForwarderContractData }: ContractUIProps) => {
   const [domain, setDomain] = useState<string>();
-  const [price, setPrice] = useState<any>();
+
   const [isAvailable, setIsAvailable] = useState<boolean>(false);
   const [years, setYears] = useState(1);
   const [txHash, setTxHash] = useState<string | undefined>(undefined);
@@ -36,36 +37,29 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
   // get signer object
   const signer = useEthersSigner({ chainId: targetNetwork.id });
 
-  // get checkRegistered function
-  const { data, refetch } = useReadContract({
-    address: deployedContractData.address,
-    functionName: "checkRegistered",
-    abi: deployedContractData.abi,
-    args: [domain as any],
-    chainId: targetNetwork.id,
-  });
+  // get checkRegistered hook
+  const { registered, checkRegisterStatus } = useCheckRegistered(
+    deployedContractData.address,
+    deployedContractData.abi,
+    domain as string,
+  );
   // get price function
-  const { data: domainPrice, refetch: getPrice } = useReadContract({
-    address: deployedContractData.address,
-    functionName: "price",
-    abi: deployedContractData.abi,
-    args: [domain as any, years],
-    chainId: targetNetwork.id,
-    query: {
-      enabled: true,
-      retry: true,
-    },
-  });
+  const { domainPrice, getPrice } = usePrice(
+    deployedContractData.address,
+    deployedContractData.abi,
+    domain as any,
+    years,
+  );
 
   /**
    * checkRegistered
    */
   const checkRegistered = async () => {
-    await refetch();
-    console.log("data:", data);
-    if (data) {
+    await checkRegisterStatus();
+    console.log("data:", registered);
+    if (registered) {
       setIsAvailable(true);
-      updatePrice();
+      await updatePrice();
       toast.info(`This domain is available`, {
         position: "top-right",
         autoClose: 5000,
@@ -132,7 +126,7 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
         {
           from: address,
           to: domains.target,
-          value: price.toString(),
+          value: domainPrice!.toString(),
           gas: 9000000,
           nonce: await forwarder.nonces(address),
           deadline: uint48Time,
@@ -147,7 +141,7 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
         request: {
           from: address,
           to: domains.target,
-          value: price.toString(),
+          value: domainPrice!.toString(),
           gas: 9000000,
           //nonce: await forwarder.nonces(address),
           deadline: uint48Time.toString(),
@@ -209,7 +203,6 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
   const updatePrice = async () => {
     await getPrice();
     console.log("price:", domainPrice);
-    setPrice(domainPrice);
   };
 
   useEffect(() => {
@@ -255,10 +248,10 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
                       </div>
                     </>
                   )}
-                  {price != undefined && (
+                  {domainPrice != undefined && (
                     <>
                       <div className="mt-6 font-semibold leading-none tracking-tighter text-neutral-600">
-                        Domain price: {formatEther(price)} XCR
+                        Domain price: {formatEther(domainPrice as any)} XCR
                       </div>
                       <div className="mt-6">
                         <button

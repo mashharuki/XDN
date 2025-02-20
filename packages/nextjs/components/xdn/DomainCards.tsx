@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { DomainCard } from "./DomainCard";
 import "react-toastify/dist/ReactToastify.css";
-import { useReadContract } from "wagmi";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useGetAllNames } from "~~/hooks/xdn";
 
 type ContractUIProps = {
   deployedContractData?: any;
-  cdhContractData?: any;
-  nftMarketContractData?: any;
   filter: string;
 };
 
@@ -18,19 +14,7 @@ type ContractUIProps = {
  * @returns
  */
 export const DomainCards = ({ deployedContractData, filter }: ContractUIProps) => {
-  const { targetNetwork } = useTargetNetwork();
-
-  const { data: names, refetch } = useReadContract({
-    address: deployedContractData.address,
-    functionName: "getAllNames",
-    abi: deployedContractData.abi,
-    args: [],
-    chainId: targetNetwork.id,
-    query: {
-      enabled: false,
-      retry: false,
-    },
-  });
+  const { names } = useGetAllNames(deployedContractData.address, deployedContractData.abi);
 
   /**
    * display cards
@@ -48,13 +32,6 @@ export const DomainCards = ({ deployedContractData, filter }: ContractUIProps) =
       </div>
     );
   };
-
-  useEffect(() => {
-    const init = async () => {
-      await refetch();
-    };
-    init();
-  }, []);
 
   return (
     <div>
