@@ -33,10 +33,10 @@ jobs:
       - name: Test Smart Contracts
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
-        run: yarn hardhat:test
+        run: yarn contract test
 
       - name: Build Frontend
-        run: yarn next:build
+        run: yarn frontend build
         env:
           NEXT_PUBLIC_ALCHEMY_API_KEY: ${{secrets.NEXT_PUBLIC_ALCHEMY_API_KEY}}
           NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: ${{secrets.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID}}
