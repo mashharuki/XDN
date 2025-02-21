@@ -38,9 +38,11 @@ task("gaslessRegister", "gasless register new domain")
 
     // create encode function data
     const data = domains.interface.encodeFunctionData("register", [
-      deployer.address,
-      name,
-      year,
+      {
+        to: deployer.address,
+        name: name,
+        year: year,
+      },
     ]);
 
     // get price

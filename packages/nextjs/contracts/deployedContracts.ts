@@ -1044,18 +1044,29 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        approve: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        balanceOf: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        getApproved: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        isApprovedForAll: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        approve:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        balanceOf:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        getApproved:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        isApprovedForAll:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         name: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        ownerOf: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        safeTransferFrom: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        setApprovalForAll: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        supportsInterface: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        symbol: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        tokenURI: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        transferFrom: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        ownerOf:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        safeTransferFrom:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        setApprovalForAll:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        supportsInterface:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        symbol:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        tokenURI:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        transferFrom:
+          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         isTrustedForwarder: "@openzeppelin/contracts/metatx/ERC2771Context.sol",
         trustedForwarder: "@openzeppelin/contracts/metatx/ERC2771Context.sol",
       },

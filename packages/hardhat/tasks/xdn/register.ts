@@ -28,9 +28,16 @@ task("register", "register new domain")
 
     try {
       // create game
-      const tx = await domains.register(deployer, name, year, {
-        value: hre.ethers.parseEther(amount),
-      });
+      const tx = await domains.register(
+        {
+          to: deployer,
+          name: name,
+          year: year,
+        },
+        {
+          value: hre.ethers.parseEther(amount),
+        }
+      );
       console.log("tx Hash:", tx.hash);
       console.log(
         "===================================== [END] ===================================== "

@@ -21,67 +21,79 @@ The Xenea Domain is minted as NFT(ERC721).
 - setup
 
   ```bash
-  yarn setup --network kura
+  yarn contract setup --network kura
   ```
 
 - test
 
   ```bash
-  yarn test
+  yarn contract test
   ```
 
 - compile contract
 
   ```bash
-  yarn hardhat:compile
+  yarn contract compile
   ```
 
 - deploy to kura
 
   ```bash
-  yarn deploy --network kura
+  yarn contract deploy --network kura
   ```
 
 - register new domain
 
   ```bash
-  yarn hardhat:register --name cdn --amount 0.001 --year 1 --network kura
+  yarn contract task:register --name cdn --amount 0.001 --year 1 --network kura
   ```
 
 - gasless register new domain
 
   ```bash
-  yarn hardhat:gaslessRegister --name cdn2 --year 1 --network kura
+  yarn contract task:gaslessRegister --name cdn2 --year 1 --network kura
   ```
 
 - check price of new domain name
 
   ```bash
-  yarn hardhat:price --name test  --network kura
+  yarn contract task:price --name test --year 1 --network kura
   ```
 
 - set record data
 
   ```bash
-  yarn hardhat:setRecord --name cdn --record sample --network kura
+  yarn contract task:setRecord --name cdn --record sample --network kura
   ```
 
 - withdraw from domains contract
 
   ```bash
-  yarn hardhat:withdraw --network kura
+  yarn contract task:withdraw --network kura
   ```
 
 - get tokenId's tokenURI
 
   ```bash
-  yarn hardhat:getTokenURI --tokenid 0 --network kura
+  yarn contract task:getTokenURI --tokenid 0 --network kura
   ```
 
 - check dmain name registered status
 
   ```bash
-  yarn hardhat:checkRegistered --name cdn --network kura
+  yarn contract task:checkRegistered --name cdn --network kura
+  ```
+
+- upgrade Contract
+
+  ```bash
+  yarn contract task:upgradeDomains --newcontract DomainsV2 --network kura
+  ```
+
+- batch register (Please upgrade before execute this task)
+
+  ```bash
+  yarn contract task:batchRegister --name sample --year 1 --network kura
   ```
 
 ### Frontend
@@ -89,13 +101,13 @@ The Xenea Domain is minted as NFT(ERC721).
 - build Frontend
 
   ```bash
-  yarn next:build
+  yarn frontend build
   ```
 
 - start Frontend
 
   ```bash
-  yarn start
+  yarn frontend dev
   ```
 
 ### CDK
