@@ -25,6 +25,14 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/domains",
     icon: <MapIcon className="h-4 w-4" />,
   },
+  {
+    label: "X ↗︎",
+    href: "https://x.com/XeneaDomainName",
+  },
+  {
+    label: "Telegram ↗︎",
+    href: "https://t.me/xeneadomainname",
+  },
 ];
 
 /**
