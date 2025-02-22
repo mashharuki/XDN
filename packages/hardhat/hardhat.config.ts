@@ -67,10 +67,26 @@ const config: HardhatUserConfig = {
       url: "https://rpc-kura.cross.technology/",
       accounts: [`0x${deployerPrivateKey}`],
     },
+    minato: {
+      url: "https://rpc.minato.soneium.org/",
+      accounts: [`0x${deployerPrivateKey}`],
+    },
   },
   // configuration for harhdat-verify plugin
   etherscan: {
-    apiKey: `${etherscanApiKey}`,
+    apiKey: {
+      minato: "empty",
+    },
+    customChains: [
+      {
+        network: "minato",
+        chainId: 1946,
+        urls: {
+          apiURL: "https://soneium-minato.blockscout.com/api",
+          browserURL: "https://soneium-minato.blockscout.com/",
+        },
+      },
+    ],
   },
   // configuration for etherscan-verify from hardhat-deploy plugin
   verify: {
