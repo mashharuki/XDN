@@ -4990,6 +4990,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": latest
     "@typescript-eslint/parser": latest
     chai: ^4.3.6
+    csv-parser: ^3.2.0
     dotenv: ^16.0.3
     envfile: ^6.18.0
     eslint: ^8.26.0
@@ -9835,6 +9836,15 @@ __metadata:
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
+  languageName: node
+  linkType: hard
+
+"csv-parser@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "csv-parser@npm:3.2.0"
+  bin:
+    csv-parser: bin/csv-parser
+  checksum: 96b35d368ad495893ba047aa02e3116c879aa0f12309f18a5b4d597ab2887e900f08eaa112beb9fb735583b0fa356bc9f1eb74a3d5aced29c2a66c2c63c226a1
   languageName: node
   linkType: hard
 

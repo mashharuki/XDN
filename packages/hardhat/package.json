@@ -62,6 +62,7 @@
     "@openzeppelin/contracts-upgradeable": "5.0.1",
     "@openzeppelin/hardhat-upgrades": "^3.9.0",
     "@typechain/ethers-v6": "^0.5.1",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.0.3",
     "envfile": "^6.18.0",
     "qrcode": "^1.5.1"
