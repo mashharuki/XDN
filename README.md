@@ -93,7 +93,7 @@ The Xenea Domain is minted as NFT(ERC721).
 - batch register (Please upgrade before execute this task)
 
   ```bash
-  yarn contract task:batchRegister --name sample --year 1 --network kura
+  yarn contract task:batchRegister --file sample.csv --network kura
   ```
 
 ### Frontend
