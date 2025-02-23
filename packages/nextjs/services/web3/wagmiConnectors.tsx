@@ -3,7 +3,7 @@ import { metaMaskWallet, rainbowWallet, walletConnectWallet } from "@rainbow-me/
 import { rainbowkitBurnerWallet } from "burner-connector";
 import { intmaxwalletsdk } from "intmax-walletsdk/rainbowkit";
 import * as chains from "viem/chains";
-import scaffoldConfig from "~~/scaffold.config";
+import scaffoldConfig from "~~/config/scaffold.config";
 
 const { onlyLocalBurnerWallet, targetNetworks } = scaffoldConfig;
 

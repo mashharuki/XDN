@@ -5,8 +5,8 @@ import { useInterval } from "usehooks-ts";
 import { Hash } from "viem";
 import * as chains from "viem/chains";
 import { usePublicClient } from "wagmi";
+import scaffoldConfig from "~~/config/scaffold.config";
 import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
-import scaffoldConfig from "~~/scaffold.config";
 import { replacer } from "~~/utils/scaffold-eth/common";
 import {
   ContractAbi,

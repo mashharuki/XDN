@@ -24,12 +24,13 @@ export type ModalProps = {
  * @returns
  */
 const Modal = (props: ModalProps) => {
-  const contractsData = getAllContracts();
-  const contractNames = Object.keys(contractsData) as ContractName[];
   const [newRecord, setNewRecord] = useState("");
 
-  const { targetNetwork } = useTargetNetwork();
+  const contractsData = getAllContracts();
+  const contractNames = Object.keys(contractsData) as ContractName[];
   const { data: SampleForwarderContractData } = useDeployedContractInfo(contractNames[1]);
+
+  const { targetNetwork } = useTargetNetwork();
   // get signer object
   const signer = useEthersSigner({ chainId: targetNetwork.id });
 

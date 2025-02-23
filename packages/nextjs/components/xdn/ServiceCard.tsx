@@ -26,7 +26,6 @@ type ContractUIProps = {
  */
 export const ServiceCard = ({ deployedContractData, SampleForwarderContractData }: ContractUIProps) => {
   const [domain, setDomain] = useState<string>();
-
   const [isAvailable, setIsAvailable] = useState<boolean>(false);
   const [years, setYears] = useState(1);
   const [txHash, setTxHash] = useState<string | undefined>(undefined);

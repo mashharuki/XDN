@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 
+/**
+ * get Metadata method
+ * @param param0
+ * @returns
+ */
 export const getMetadata = ({
   title,
   description,
