@@ -8,6 +8,11 @@ type InputBaseProps<T> = CommonInputProps<T> & {
   reFocus?: boolean;
 };
 
+/**
+ * InputBase Component
+ * @param param0
+ * @returns
+ */
 export const InputBase = <T extends { toString: () => string } | undefined = string>({
   name,
   value,

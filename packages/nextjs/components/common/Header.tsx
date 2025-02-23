@@ -15,6 +15,7 @@ type HeaderMenuLink = {
   icon?: React.ReactNode;
 };
 
+// Menu links
 export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
@@ -65,7 +66,7 @@ export const HeaderMenuLinks = () => {
 };
 
 /**
- * Site header
+ * Site header Component
  */
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -7,6 +7,11 @@ type AddressQRCodeModalProps = {
   modalId: string;
 };
 
+/**
+ * AddressQRCodeModal Component
+ * @param param0
+ * @returns
+ */
 export const AddressQRCodeModal = ({ address, modalId }: AddressQRCodeModalProps) => {
   return (
     <>

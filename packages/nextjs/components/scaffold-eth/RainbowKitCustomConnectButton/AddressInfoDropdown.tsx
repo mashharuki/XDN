@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import { NetworkOptions } from "./NetworkOptions";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { getAddress } from "viem";
-import { Address } from "viem";
+import { Address, getAddress } from "viem";
 import { useDisconnect } from "wagmi";
 import {
   ArrowLeftOnRectangleIcon,
@@ -26,6 +25,11 @@ type AddressInfoDropdownProps = {
   ensAvatar?: string;
 };
 
+/**
+ * AddressInfoDropdown Component
+ * @param param0
+ * @returns
+ */
 export const AddressInfoDropdown = ({
   address,
   ensAvatar,

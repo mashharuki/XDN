@@ -10,6 +10,11 @@ type NetworkOptionsProps = {
   hidden?: boolean;
 };
 
+/**
+ * NetworkOptions Component
+ * @param param0
+ * @returns
+ */
 export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
   const { switchChain } = useSwitchChain();
   const { chain } = useAccount();

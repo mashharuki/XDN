@@ -2,6 +2,10 @@ import { NetworkOptions } from "./NetworkOptions";
 import { useDisconnect } from "wagmi";
 import { ArrowLeftOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
+/**
+ * WrongNetworkDropdown Component
+ * @returns
+ */
 export const WrongNetworkDropdown = () => {
   const { disconnect } = useDisconnect();
 

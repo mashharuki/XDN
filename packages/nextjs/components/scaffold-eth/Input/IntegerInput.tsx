@@ -6,6 +6,11 @@ type IntegerInputProps = CommonInputProps<string | bigint> & {
   disableMultiplyBy1e18?: boolean;
 };
 
+/**
+ * IntegerInput Component
+ * @param param0
+ * @returns
+ */
 export const IntegerInput = ({
   value,
   onChange,

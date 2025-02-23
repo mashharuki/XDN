@@ -5,6 +5,10 @@ import NProgress from "nprogress";
 
 type PushStateInput = [data: any, unused: string, url?: string | URL | null | undefined];
 
+/**
+ * ProgressBar Component
+ * @returns
+ */
 export function ProgressBar() {
   const height = "3px";
   const color = "#2299dd";

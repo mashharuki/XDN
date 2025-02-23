@@ -14,6 +14,11 @@ import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
+/**
+ * ScaffoldEthApp Component
+ * @param param0
+ * @returns
+ */
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   const price = useNativeCurrencyPrice();
   const setNativeCurrencyPrice = useGlobalState(state => state.setNativeCurrencyPrice);
@@ -44,6 +49,11 @@ export const queryClient = new QueryClient({
   },
 });
 
+/**
+ * ScaffoldEthAppWithProviders Component
+ * @param param0
+ * @returns
+ */
 export const ScaffoldEthAppWithProviders = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const isDarkMode = resolvedTheme === "dark";
