@@ -12,7 +12,7 @@
     "contract": "yarn workspace @se-2/hardhat",
     "frontend": "yarn workspace @se-2/nextjs",
     "cdk": "yarn workspace @se-2/cdk",
-    "format": "yarn next:format && yarn hardhat:format",
+    "format": "yarn frontend format && yarn contract format",
     "postinstall": "husky install",
     "precommit": "lint-staged"
   },
