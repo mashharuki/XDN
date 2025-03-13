@@ -48,6 +48,8 @@ contract Domains is
   mapping(address => string[]) public ownerDomains;
   // ドメインの有効期限を管理するマップ
   mapping(uint256 => uint256) public expirationDates;
+  // ホワイトリストに含まれているかどうかを管理するマップ
+  mapping(address => bool) public whitelist;
 
   // event
   event Register(address owner, string name);
@@ -56,6 +58,7 @@ contract Domains is
   event DomainTransferred(uint256 tokenId, address newOwner);
   event Received(address indexed sender, uint256 amount);
   event FallbackReceived(address indexed sender, uint256 amount);
+  event AddedToWhitelist(address indexed account);
 
   // カスタムエラー用の変数
   error Unauthorized();
@@ -65,6 +68,12 @@ contract Domains is
   // 有効期限が切れているかを確認する修飾子
   modifier onlyValidToken(uint256 tokenId) {
     require(expirationDates[tokenId] > block.timestamp, "Token expired");
+    _;
+  }
+
+  // ホワイトリストに含まれているかを確認する修飾子
+  modifier onlyWhitelisted() {
+    require(whitelist[msg.sender], "Not in whitelist");
     _;
   }
 
@@ -320,6 +329,24 @@ contract Domains is
    */
   function valid(string calldata name) private pure returns (bool) {
     return StringUtils.strlen(name) >= 3 && StringUtils.strlen(name) <= 10;
+  }
+
+  /**
+   * まとめてホワイトリストに登録するためのメソッド
+   */
+  function addToWhitelist(address[] calldata addresses) external onlyOwner {
+    for (uint256 i = 0; i < addresses.length; i++) {
+      whitelist[addresses[i]] = true;
+      emit AddedToWhitelist(addresses[i]);
+    }
+  }
+
+  /**
+   * ホワイトリストに登録されているアカウントがフリーミントするためのメソッド
+   */
+  function freeMint(RegistData calldata data) external onlyWhitelisted {
+    // NFTをミントする。
+    mintDomain(data);
   }
 
   ///////////////////////////////// ERC2771 method /////////////////////////////////

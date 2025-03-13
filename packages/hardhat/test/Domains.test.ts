@@ -378,6 +378,60 @@ describe("Domains", function () {
     });
   });
 
+  describe("Whitelist", function () {
+    it("add new address to Whitelist", async function () {
+      // delpoy contract
+      const {domains, account1, account2} = await deployContract();
+
+      // add new address to whitelist
+      await domains.addToWhitelist([account1.address, account2.address]);
+
+      // check whitelist
+      const isWhitelisted = await domains.whitelist(account1.address);
+      expect(isWhitelisted).to.equal(true);
+
+      // check whitelist
+      const isWhitelisted2 = await domains.whitelist(account2.address);
+      expect(isWhitelisted2).to.equal(true);
+    });
+
+    it("freemint test", async function () {
+      // delpoy contract
+      const {domains, account1} = await deployContract();
+
+      // add new address to whitelist
+      await domains.addToWhitelist([account1.address]);
+
+      // freemint
+      await domains.freeMint({
+        to: account1.address,
+        name: "haruki",
+        year: 2,
+      });
+
+      // check domain owner
+      const domainOwner = await domains.domains("haruki");
+      expect(domainOwner).to.equal(account1.address);
+    });
+
+    it("【error pattern】 free mint not whitelisted address", async function () {
+      // delpoy contract
+      const {domains, account1, account2} = await deployContract();
+
+      // add new address to whitelist
+      await domains.addToWhitelist([account1.address]);
+
+      // freemint
+      await expect(
+        domains.connect(account2).freeMint({
+          to: account2.address,
+          name: "haruki",
+          year: 2,
+        })
+      ).to.be.revertedWith("Not in whitelist");
+    });
+  });
+
   describe("Update", function () {
     it("Update Domains Contract", async function () {
       // delpoy contract

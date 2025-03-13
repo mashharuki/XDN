@@ -24,7 +24,9 @@
     "task:getTokenURI": "hardhat getTokenURI",
     "task:checkRegistered": "hardhat checkRegistered",
     "task:upgradeDomains": "hardhat upgradeDomains",
-    "task:batchRegister": "hardhat batchRegister"
+    "task:batchRegister": "hardhat batchRegister",
+    "task:addToWhitelist": "hardhat addToWhitelist",
+    "task:freeMint": "hardhat freeMint"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",

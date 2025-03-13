@@ -96,6 +96,18 @@ The Xenea Domain is minted as NFT(ERC721).
   yarn contract task:batchRegister --file sample.csv --network kura
   ```
 
+- **add new whitelist**
+
+  ```bash
+  yarn contract task:addToWhitelist --file sample.csv --network kura
+  ```
+
+- **free mint**
+
+  ```bash
+  yarn contract task:freeMint --name cdn --year 1 --network kura
+  ```
+
 ### Frontend
 
 - **build Frontend**
