@@ -121,6 +121,7 @@ export const Address = ({ address, disableAddressLink, format, size = "base" }: 
           aria-hidden="true"
         />
       ) : (
+        //@ts-ignore
         <CopyToClipboard
           text={checkSumAddress}
           onCopy={() => {

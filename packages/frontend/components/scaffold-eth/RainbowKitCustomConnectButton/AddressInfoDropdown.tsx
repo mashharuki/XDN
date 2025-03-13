@@ -74,6 +74,7 @@ export const AddressInfoDropdown = ({
                 <span className=" whitespace-nowrap">Copy address</span>
               </div>
             ) : (
+              //@ts-ignore
               <CopyToClipboard
                 text={checkSumAddress}
                 onCopy={() => {
