@@ -4967,9 +4967,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@se-2/hardhat@workspace:packages/hardhat":
+"@se-2/hardhat@workspace:packages/contract":
   version: 0.0.0-use.local
-  resolution: "@se-2/hardhat@workspace:packages/hardhat"
+  resolution: "@se-2/hardhat@workspace:packages/contract"
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/providers": ^5.7.1
@@ -5011,9 +5011,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@se-2/nextjs@workspace:packages/nextjs":
+"@se-2/nextjs@workspace:packages/frontend":
   version: 0.0.0-use.local
-  resolution: "@se-2/nextjs@workspace:packages/nextjs"
+  resolution: "@se-2/nextjs@workspace:packages/frontend"
   dependencies:
     "@heroicons/react": ^2.0.11
     "@rainbow-me/rainbowkit": ^2.0.2
