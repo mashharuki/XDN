@@ -18,93 +18,105 @@ The Xenea Domain is minted as NFT(ERC721).
 
 ### Contract
 
-- setup
+- **setup**
 
   ```bash
   yarn contract setup --network kura
   ```
 
-- test
+- **test**
 
   ```bash
   yarn contract test
   ```
 
-- compile contract
+- **compile contract**
 
   ```bash
   yarn contract compile
   ```
 
-- deploy to kura
+- **deploy to kura**
 
   ```bash
   yarn contract deploy --network kura
   ```
 
-- register new domain
+- **register new domain**
 
   ```bash
   yarn contract task:register --name cdn --amount 0.001 --year 1 --network kura
   ```
 
-- gasless register new domain
+- **gasless register new domain**
 
   ```bash
   yarn contract task:gaslessRegister --name cdn2 --year 1 --network kura
   ```
 
-- check price of new domain name
+- **check price of new domain name**
 
   ```bash
   yarn contract task:price --name test --year 1 --network kura
   ```
 
-- set record data
+- **set record data**
 
   ```bash
   yarn contract task:setRecord --name cdn --record sample --network kura
   ```
 
-- withdraw from domains contract
+- **withdraw from domains contract**
 
   ```bash
   yarn contract task:withdraw --network kura
   ```
 
-- get tokenId's tokenURI
+- **get tokenId's tokenURI**
 
   ```bash
   yarn contract task:getTokenURI --tokenid 0 --network kura
   ```
 
-- check dmain name registered status
+- **check dmain name registered status**
 
   ```bash
   yarn contract task:checkRegistered --name cdn --network kura
   ```
 
-- upgrade Contract
+- **upgrade Contract**
 
   ```bash
   yarn contract task:upgradeDomains --newcontract DomainsV2 --network kura
   ```
 
-- batch register (Please upgrade before execute this task)
+- **batch register (Please upgrade before execute this task)**
 
   ```bash
   yarn contract task:batchRegister --file sample.csv --network kura
   ```
 
+- **add new whitelist**
+
+  ```bash
+  yarn contract task:addToWhitelist --file sample.csv --network kura
+  ```
+
+- **free mint**
+
+  ```bash
+  yarn contract task:freeMint --name cdn --year 1 --network kura
+  ```
+
 ### Frontend
 
-- build Frontend
+- **build Frontend**
 
   ```bash
   yarn frontend build
   ```
 
-- start Frontend
+- **start Frontend**
 
   ```bash
   yarn frontend dev
@@ -112,13 +124,13 @@ The Xenea Domain is minted as NFT(ERC721).
 
 ### CDK
 
-- deploy CDK Stack
+- **deploy CDK Stack**
 
   ```bash
   yarn cdk deploy
   ```
 
-- destroy CDK Stack
+- **destroy CDK Stack**
 
   ```bash
   yarn cdke destroy '*' --force
