@@ -6,6 +6,5 @@
       "use": "@vercel/node"
     }
   ],
-  "buildCommand": "yarn build",
-  "buildOutput": ".next"
+  "buildCommand": "yarn build"
 }
