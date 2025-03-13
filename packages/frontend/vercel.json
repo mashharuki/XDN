@@ -1,3 +1,11 @@
 {
-  "installCommand": "yarn install"
+  "installCommand": "yarn install",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "buildCommand": "yarn build",
+  "buildOutput": ".next"
 }
