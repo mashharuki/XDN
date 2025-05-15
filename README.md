@@ -133,7 +133,7 @@ The Xenea Domain is minted as NFT(ERC721).
 - **destroy CDK Stack**
 
   ```bash
-  yarn cdke destroy '*' --force
+  yarn cdk destroy '*' --force
   ```
 
 ### 参考文献
