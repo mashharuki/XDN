@@ -22,11 +22,23 @@ export class RelayerStack extends cdk.Stack {
 
     // Lambda関数を定義
     const lambdaFunction = new NodejsFunction(this, "RelayerLambdaFunction", {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       entry: path.join(__dirname, "../resources/lambda/index.ts"),
       handler: "handler",
       bundling: {
-        forceDockerBundling: true,
+        forceDockerBundling: false,
+        commandHooks: {
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [];
+          },
+          afterBundling(inputDir: string, outputDir: string): string[] {
+            return [];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
+        target: "node20",
       },
       timeout: cdk.Duration.seconds(600),
       environment: {
