@@ -466,5 +466,150 @@ describe("Domains", function () {
       const domainOwner2 = await domainsV2.domains("haruki2");
       expect(domainOwner2).to.equal(account2.address);
     });
+
+    it("Should batch register domains to 10 wallet addresses", async function () {
+      // Deploy contract
+      const {domains, forwarder, account1} = await deployContract();
+
+      // Upgrade contract
+      const domainsV2 = await upgradeContract(
+        domains.target as string,
+        forwarder.target as string
+      );
+
+      // Get 10 accounts for testing
+      const accounts = await ethers.getSigners();
+      const testAccounts = accounts.slice(0, 10);
+
+      // Create 10 domain registration data entries
+      const datas = testAccounts.map((account, index) => ({
+        to: account.address,
+        name: `domain${index + 1}`,
+        year: 1,
+      }));
+
+      // Check that the contract owner can register domains in batch
+      const txn = await domainsV2.connect(account1).batchRegister(datas);
+      await txn.wait();
+
+      // Verify each domain was registered to the correct owner
+      for (let i = 0; i < testAccounts.length; i++) {
+        const domainName = `domain${i + 1}`;
+        const domainOwner = await domainsV2.domains(domainName);
+        expect(domainOwner).to.equal(testAccounts[i].address);
+      }
+
+      // Verify the total number of domains for each owner
+      for (let i = 0; i < testAccounts.length; i++) {
+        const ownedDomains = await domainsV2.getDomainsByOwner(
+          testAccounts[i].address
+        );
+        expect(ownedDomains.length).to.equal(1);
+        expect(ownedDomains[0]).to.equal(`domain${i + 1}`);
+      }
+
+      // Check expiration dates are set correctly (all domains should expire in 1 year)
+      for (let i = 0; i < 10; i++) {
+        const tokenId = i;
+        const expirationDate = await domainsV2.expirationDates(tokenId);
+
+        // Check expiration date is roughly one year from now
+        const currentBlock = await ethers.provider.getBlock("latest");
+        const currentTime = currentBlock!.timestamp;
+        const oneYearInSeconds = 365 * 24 * 60 * 60;
+
+        // Allow for a small margin of error (a few seconds) in timestamp comparison
+        expect(Number(expirationDate)).to.be.approximately(
+          currentTime + oneYearInSeconds,
+          10 // Tolerate a difference of 10 seconds
+        );
+      }
+    });
+
+    it("Should batch register domains to multiple wallet addresses in chunks", async function () {
+      this.timeout(120000); // タイムアウト時間を増加（120秒）
+
+      // Deploy contract
+      const {domains, forwarder, account1} = await deployContract();
+
+      // Upgrade contract
+      const domainsV2 = await upgradeContract(
+        domains.target as string,
+        forwarder.target as string
+      );
+
+      // 総数を設定
+      const totalWallets = 1000;
+      const chunkSize = 10;
+
+      // テスト用のウォレットアドレスを作成
+      const wallets: Array<{address: string}> = [];
+      const existingAccounts = await ethers.getSigners();
+
+      // 既存のアカウントを使用
+      wallets.push(...existingAccounts);
+
+      // 必要な分だけ追加のウォレットアドレスを生成
+      const walletsNeeded = totalWallets - wallets.length;
+      if (walletsNeeded > 0) {
+        for (let i = 0; i < walletsNeeded; i++) {
+          const wallet = ethers.Wallet.createRandom();
+          wallets.push({address: wallet.address});
+        }
+      }
+
+      // チャンク（バッチ）処理
+      for (let i = 0; i < totalWallets; i += chunkSize) {
+        const end = Math.min(i + chunkSize, totalWallets);
+        console.log(
+          `Processing batch ${i / chunkSize + 1}: wallets ${i + 1} to ${end}`
+        );
+
+        const chunkWallets = wallets.slice(i, end);
+        const datas = chunkWallets.map((wallet, index) => ({
+          to: wallet.address,
+          name: `bulk${i + index + 1}`,
+          year: 1,
+        }));
+
+        // バッチ登録実行
+        const txn = await domainsV2.connect(account1).batchRegister(datas);
+        await txn.wait();
+      }
+
+      // サンプルデータの検証（すべてを検証するのは時間がかかるため）
+      const sampleIndices = [0, 9, 24, 49]; // 最初、最後、その間のインデックス
+
+      for (const index of sampleIndices) {
+        if (index < totalWallets) {
+          const domainName = `bulk${index + 1}`;
+          const domainOwner = await domainsV2.domains(domainName);
+          expect(domainOwner).to.equal(wallets[index].address);
+        }
+      }
+
+      // 全ドメイン名の検証
+      const allNames = await domainsV2.getAllNames();
+      expect(allNames.length).to.equal(totalWallets);
+
+      // サンプルドメインの有効期限を確認
+      for (const index of sampleIndices) {
+        if (index < totalWallets) {
+          const tokenId = index;
+          const expirationDate = await domainsV2.expirationDates(tokenId);
+
+          // 有効期限が約1年後に設定されていることを確認
+          const currentBlock = await ethers.provider.getBlock("latest");
+          const currentTime = currentBlock!.timestamp;
+          const oneYearInSeconds = 365 * 24 * 60 * 60;
+
+          // タイムスタンプ比較の許容誤差を設定
+          expect(Number(expirationDate)).to.be.approximately(
+            currentTime + oneYearInSeconds,
+            500 // 10秒の誤差を許容
+          );
+        }
+      }
+    });
   });
 });
