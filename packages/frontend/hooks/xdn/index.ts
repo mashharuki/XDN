@@ -1,3 +1,4 @@
 export * from "./useCheckRegistered";
-export * from "./usePrice";
 export * from "./useGetAllNames";
+export * from "./usePrice";
+export * from "./useRegister";

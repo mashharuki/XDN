@@ -1,19 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Contract, ethers } from "ethers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { formatEther } from "viem";
 import { useAccount, useWriteContract } from "wagmi";
-import { POST } from "~~/app/api/requestRelayer/route";
 import Loading from "~~/components/common/Loading";
-import { useEthersSigner } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { useCheckRegistered, usePrice } from "~~/hooks/xdn";
-import { RPC_URL } from "~~/utils/constants";
-import { getUint48 } from "~~/utils/helper";
-import { ForwardRequest } from "~~/utils/types";
+import { useCheckRegistered, usePrice, useRegister } from "~~/hooks/xdn";
 
 type ContractUIProps = {
   deployedContractData?: any;
@@ -33,8 +27,13 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
   const { targetNetwork } = useTargetNetwork();
   const { address } = useAccount();
   const { isPending } = useWriteContract();
-  // get signer object
-  const signer = useEthersSigner({ chainId: targetNetwork.id });
+  // get register hook
+  const { register, data } = useRegister({
+    deployedContractData: {
+      address: deployedContractData.address,
+      abi: deployedContractData.abi,
+    },
+  });
 
   // get checkRegistered hook
   const { registered, checkRegisterStatus } = useCheckRegistered(
@@ -49,6 +48,8 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
     domain as any,
     years,
   );
+
+  console.log("SampleForwarderContractData:", SampleForwarderContractData);
 
   /**
    * checkRegistered
@@ -87,81 +88,34 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
   /**
    * register
    */
-  const register = async () => {
+  const registerDomain = async () => {
     try {
       console.log("address:", address);
       console.log("deployedContractData.address:", deployedContractData.address);
 
-      // create Contract object
-      const domains: any = new Contract(deployedContractData.address, deployedContractData.abi, signer) as any;
-      const forwarder: any = new Contract(
-        SampleForwarderContractData.address,
-        SampleForwarderContractData.abi,
-        signer,
-      ) as any;
-      // generate encoded data
-      const data = domains.interface.encodeFunctionData("register", [address, domain, years]);
-      // get EIP712 domain
-      const eip721Domain = await forwarder.eip712Domain();
-      const provider = new ethers.JsonRpcProvider(RPC_URL);
-      // get current block
-      const currentBlock = await provider.getBlock("latest");
-      const currentTime = currentBlock!.timestamp;
-      // get deadline
-      const uint48Time = await getUint48(currentTime);
-      console.log("getUint48:", uint48Time);
+      // reserve domain
+      await register({
+        address: deployedContractData.address,
+        domain: domain as string,
+        years: years,
+        domainPrice: domainPrice as any,
+      });
 
-      // creat metaTx request data
-      const signature = await signer!.signTypedData(
-        {
-          name: eip721Domain.name,
-          version: eip721Domain.version,
-          chainId: eip721Domain.chainId,
-          verifyingContract: eip721Domain.verifyingContract,
-        },
-        {
-          ForwardRequest: ForwardRequest,
-        },
-        {
-          from: address,
-          to: domains.target,
-          value: domainPrice!.toString(),
-          gas: 9000000,
-          nonce: await forwarder.nonces(address),
-          deadline: uint48Time,
-          data: data,
-        },
-      );
+      console.log("Registering domain...");
 
-      console.log("signature:", signature);
+      // get result
+      console.log("register response:", data);
+      setTxHash(data?.txHash);
 
-      // call execute method from relayer
-      await POST({
-        request: {
-          from: address,
-          to: domains.target,
-          value: domainPrice!.toString(),
-          gas: 9000000,
-          //nonce: await forwarder.nonces(address),
-          deadline: uint48Time.toString(),
-          data: data,
-          signature: signature,
-        },
-      }).then(async result => {
-        // APIリクエストのリザルトをJSONとして解析
-        console.log("API response:", result);
-        setTxHash(result.body.txHash);
-
-        toast.success("🦄 Success!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+      toast.success("🦄 Success!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
       });
     } catch (err: any) {
       console.error("err:", err);
@@ -255,7 +209,7 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
                       <div className="mt-6">
                         <button
                           className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-400 ease-in-out transform bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                          onClick={register}
+                          onClick={registerDomain}
                         >
                           Register Your Domain
                         </button>
