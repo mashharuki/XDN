@@ -65,23 +65,32 @@ function getInheritedFunctions(
   contractName: string
 ) {
   const actualSources = getActualSourcesForContract(sources, contractName);
-  const inheritedFunctions = {} as Record<string, any>;
+  const inheritedFunctions: Record<string, any> = {};
 
   for (const sourceContractName of actualSources) {
     const sourcePath = Object.keys(sources).find((key) =>
       key.includes(`/${sourceContractName}`)
     );
-    if (sourcePath) {
-      const sourceName = sourcePath?.split("/").pop()?.split(".sol")[0];
-      const {abi} = JSON.parse(
-        fs
-          .readFileSync(`${ARTIFACTS_DIR}/${sourcePath}/${sourceName}.json`)
-          .toString()
-      );
-      for (const functionAbi of abi) {
-        if (functionAbi.type === "function") {
-          inheritedFunctions[functionAbi.name] = sourcePath;
-        }
+    if (!sourcePath) continue;
+    // derive sourceName from path (e.g., 'ERC721URIStorageUpgradeable.sol')
+    const parts = sourcePath.split("/");
+    const fileName = parts[parts.length - 1];
+    const sourceName = fileName.replace(/\.sol$/i, "");
+
+    let abi;
+    try {
+      const artifactPath = `${ARTIFACTS_DIR}/${sourcePath}/${sourceName}.json`;
+      const artifactJson = fs.readFileSync(artifactPath, "utf8");
+      const parsed = JSON.parse(artifactJson);
+      abi = parsed.abi;
+    } catch (err) {
+      // artifact missing or parse error; skip this source
+      continue;
+    }
+
+    for (const functionAbi of abi) {
+      if (functionAbi.type === "function") {
+        inheritedFunctions[functionAbi.name] = sourcePath;
       }
     }
   }
@@ -125,7 +134,7 @@ function getContractDataFromDeployments() {
  * This script should be run last.
  */
 const generateTsAbis: DeployFunction = async function () {
-  const TARGET_DIR = "../nextjs/contracts/";
+  const TARGET_DIR = "../frontend/contracts/";
   const allContractsData = getContractDataFromDeployments();
 
   const fileContent = Object.entries(allContractsData).reduce(
