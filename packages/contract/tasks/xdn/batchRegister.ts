@@ -1,10 +1,10 @@
+import csvParser from "csv-parser";
 import "dotenv/config";
+import * as fs from "fs";
 import {task} from "hardhat/config";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
-import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
-import * as fs from "fs";
 import * as path from "path";
-import csvParser from "csv-parser";
+import {loadDeployedContractAddresses} from "../../helper/contractsJsonHelper";
 
 /**
  * CSVのデータを読み込む関数
@@ -64,9 +64,15 @@ task("batchRegister", "batch register new domains")
         return;
       }
 
-      // batch register
-      const tx = await domains.batchRegister(domainData);
-      console.log("tx Hash:", tx.hash);
+      // batch register in chunks of 2
+      const chunkSize = 2;
+      for (let i = 0; i < domainData.length; i += chunkSize) {
+        const chunk = domainData.slice(i, i + chunkSize);
+        console.log(`Sending batch ${Math.floor(i / chunkSize) + 1}:`, chunk);
+        const tx = await domains.batchRegister(chunk);
+        console.log(`Batch ${Math.floor(i / chunkSize) + 1} tx Hash:`, tx.hash);
+        await tx.wait();
+      }
       console.log(
         "===================================== [END] ===================================== "
       );
