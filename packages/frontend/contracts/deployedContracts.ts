@@ -7,23 +7,12 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   1946: {
     SampleForwarder: {
-      address: "0x67ADc29278d87D87b212C59fDffd2749fe7418c4",
+      address: "0x9370C082dabFb847b6F4d7b3Cf9c001aDCC85d8d",
       abi: [
         {
           inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "AddressInsufficientBalance",
-          type: "error",
         },
         {
           inputs: [
@@ -86,7 +75,23 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "FailedInnerCall",
+          name: "FailedCall",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "balance",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "needed",
+              type: "uint256",
+            },
+          ],
+          name: "InsufficientBalance",
           type: "error",
         },
         {
@@ -1470,51 +1475,17 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        approve:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        balanceOf:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        getApproved:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        isApprovedForAll:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        name: "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        ownerOf:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        safeTransferFrom:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        setApprovalForAll:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        supportsInterface:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        symbol:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        tokenURI:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        transferFrom:
-          "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
         isTrustedForwarder: "@openzeppelin/contracts/metatx/ERC2771Context.sol",
         trustedForwarder: "@openzeppelin/contracts/metatx/ERC2771Context.sol",
       },
     },
     SampleForwarder: {
-      address: "0x62CD2CBC855746c16FD16b4E5b34110e1549fc2e",
+      address: "0x118C6940e95f9333f6BD0E1F767530a350f049da",
       abi: [
         {
           inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "AddressInsufficientBalance",
-          type: "error",
         },
         {
           inputs: [
@@ -1577,7 +1548,23 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "FailedInnerCall",
+          name: "FailedCall",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "balance",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "needed",
+              type: "uint256",
+            },
+          ],
+          name: "InsufficientBalance",
           type: "error",
         },
         {
