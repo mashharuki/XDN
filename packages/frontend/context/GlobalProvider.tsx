@@ -1,8 +1,32 @@
 "use client";
 
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-export const GlobalContext = createContext<any>({});
+interface GlobalContextType {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+}
+
+const defaultValue: GlobalContextType = {
+  loading: false,
+  setLoading: () => {
+    // Default implementation - does nothing
+  },
+};
+
+export const GlobalContext = createContext<GlobalContextType>(defaultValue);
+
+/**
+ * Custom hook to use GlobalContext
+ * @returns GlobalContextType
+ */
+export const useGlobalContext = (): GlobalContextType => {
+  const context = useContext(GlobalContext);
+  if (!context) {
+    throw new Error("useGlobalContext must be used within a GlobalProvider");
+  }
+  return context;
+};
 
 /**
  * GlobalProvider

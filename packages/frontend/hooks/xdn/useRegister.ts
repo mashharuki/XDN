@@ -1,6 +1,6 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { useWriteContract } from "wagmi";
-import { GlobalContext } from "~~/context/GlobalProvider";
+import { useGlobalContext } from "~~/context/GlobalProvider";
 
 interface RegisterParams {
   address: string;
@@ -25,7 +25,7 @@ export const useRegister = (props: RegisterProps) => {
   const [data, setData] = useState<RegisterResult | null>(null);
   const { writeContract, isPending, error, data: writeData } = useWriteContract();
 
-  const { loading, setLoading } = useContext(GlobalContext);
+  const { loading, setLoading } = useGlobalContext();
 
   /**
    * Register function
@@ -72,7 +72,7 @@ export const useRegister = (props: RegisterProps) => {
         throw e;
       }
     },
-    [props, writeContract, writeData],
+    [props, writeContract, writeData, loading, setLoading],
   );
 
   return { register, isLoading: isPending, error, data };
