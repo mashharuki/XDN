@@ -45,11 +45,12 @@ export const useRegister = (props: RegisterProps) => {
         });
 
         console.log("Transaction submitted");
+        console.log("writeData:", writeData);
 
         // Note: writeContract doesn't return a hash directly
         // The transaction hash will be available in writeData after the transaction is submitted
         const registerResult: RegisterResult = {
-          txHash: writeData || "pending",
+          txHash: writeData as string,
           message: "Registration submitted",
         };
         setData(registerResult);

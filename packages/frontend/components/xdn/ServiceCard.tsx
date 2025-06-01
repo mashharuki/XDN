@@ -93,33 +93,33 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
       console.log("address:", address);
       console.log("deployedContractData.address:", deployedContractData.address);
 
+      console.log("Registering domain...");
+
       // reserve domain
       await register({
         address: deployedContractData.address,
         domain: domain as string,
         years: years,
         domainPrice: domainPrice as any,
-      });
-
-      console.log("Registering domain...");
-
-      // get result
-      console.log("register response:", data);
-      setTxHash(data?.txHash);
-
-      toast.success("🦄 Success!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      }).then(() => {
+        // get result
+        console.log("register response:", data);
+        setTxHash(data?.txHash);
+        // show success message
+        toast.success("🦄 Mint Success!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
     } catch (err: any) {
       console.error("err:", err);
-      toast.error("Failed....", {
+      toast.error("Mint Failed....", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

@@ -68,7 +68,7 @@ task("batchRegister", "batch register new domains")
       const chunkSize = 2;
       for (let i = 0; i < domainData.length; i += chunkSize) {
         const chunk = domainData.slice(i, i + chunkSize);
-        console.log(`Sending batch ${Math.floor(i / chunkSize) + 1}:`, chunk);
+        // console.log(`Sending batch ${Math.floor(i / chunkSize) + 1}:`, chunk);
         const tx = await domains.batchRegister(chunk);
         console.log(`Batch ${Math.floor(i / chunkSize) + 1} tx Hash:`, tx.hash);
         await tx.wait();
