@@ -7,8 +7,8 @@ import "~~/styles/globals.css";
  */
 const Loading = () => {
   return (
-    <div className="loading">
-      <CircularProgress variant="dotted" color="#316acc" size="large" text="wait..." textColor="" />
+    <div className="loading content-center flex items-center justify-center">
+      <CircularProgress variant="bubble-dotted" color="#316acc" size="large" text="wait..." textColor="green" />
     </div>
   );
 };

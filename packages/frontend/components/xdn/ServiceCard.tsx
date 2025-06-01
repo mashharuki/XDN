@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { formatEther } from "viem";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
 import Loading from "~~/components/common/Loading";
+import { GlobalContext } from "~~/context/GlobalProvider";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useCheckRegistered, usePrice, useRegister } from "~~/hooks/xdn";
 
@@ -24,9 +25,11 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
   const [years, setYears] = useState(1);
   const [txHash, setTxHash] = useState<string | undefined>(undefined);
 
+  const { loading } = useContext(GlobalContext);
+
   const { targetNetwork } = useTargetNetwork();
   const { address } = useAccount();
-  const { isPending } = useWriteContract();
+
   // get register hook
   const { register, data } = useRegister({
     deployedContractData: {
@@ -103,6 +106,7 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
         domainPrice: domainPrice as any,
       }).then(() => {
         // get result
+        console.log("loading:", loading);
         console.log("register response:", data);
         setTxHash(data?.txHash);
         // show success message
@@ -164,8 +168,11 @@ export const ServiceCard = ({ deployedContractData, SampleForwarderContractData 
 
   return (
     <>
-      {isPending ? (
-        <Loading />
+      {loading ? (
+        <>
+          {console.log("loading:", loading)}
+          <Loading />
+        </>
       ) : (
         <>
           <div className="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">

@@ -2,6 +2,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/common/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/common/ThemeProvider";
+import { GlobalProvider } from "~~/context/GlobalProvider";
 import "~~/styles/globals.css";
 
 const baseUrl = process.env.VERCEL_URL
@@ -62,7 +63,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       </head>
       <body>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders>
+            <GlobalProvider>{children}</GlobalProvider>
+          </ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
     </html>
