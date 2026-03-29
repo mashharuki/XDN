@@ -1,6 +1,7 @@
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 /**
+ * 外部のコントラクトを呼び出す場合はここにコントラクト名、アドレス、ABIを定義する
  * @example
  * const externalContracts = {
  *   1: {

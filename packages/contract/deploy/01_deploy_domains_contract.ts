@@ -4,11 +4,15 @@ import {DeployFunction} from "hardhat-deploy/types";
 import {HardhatRuntimeEnvironment} from "hardhat/types";
 import {writeContractAddress} from "../helper/contractsJsonHelper";
 
+/**
+ * ドメインコントラクトをデプロイするスクリプト
+ * @param hre
+ */
 const deployDomainsContract: DeployFunction = async function (
-  hre: HardhatRuntimeEnvironment
+  hre: HardhatRuntimeEnvironment,
 ) {
   console.log(
-    "===================================== [START] ===================================== "
+    "===================================== [START] ===================================== ",
   );
   // get deployment accounts data
   const {deployer} = await hre.getNamedAccounts();
@@ -25,7 +29,7 @@ const deployDomainsContract: DeployFunction = async function (
   // Get the deployed contract to interact with it after deploying.
   const forwarder = await hre.ethers.getContract<Contract>(
     "SampleForwarder",
-    deployer
+    deployer,
   );
 
   // Top Level Domain
@@ -33,7 +37,7 @@ const deployDomainsContract: DeployFunction = async function (
 
   // deploy Domains contract via upgradeable proxy contact
   const Domains = await ethers.getContractFactory("Domains");
-  // deploy
+  // ドメインコントラクトをdeployする(フォワーダーコントラクトをコンストラクタ引数に渡す)
   const domains = await upgrades.deployProxy(Domains, [tld, deployer], {
     initializer: "initialize",
     constructorArgs: [forwarder.target],
@@ -57,7 +61,7 @@ const deployDomainsContract: DeployFunction = async function (
   });
 
   console.log(
-    "===================================== [END] ===================================== "
+    "===================================== [END] ===================================== ",
   );
 };
 
