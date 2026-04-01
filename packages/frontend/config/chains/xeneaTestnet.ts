@@ -4,20 +4,20 @@ import * as chains from "viem/chains";
  * Xenea testnet config
  */
 export const xeneaTestnet: chains.Chain = {
-  id: 5555,
+  id: 1096,
   name: "Xenea Testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "XCR",
-    symbol: "XCR",
+    name: "TXENE",
+    symbol: "TXENE",
   },
   rpcUrls: {
-    default: { http: ["https://rpc-kura.cross.technology"] },
+    default: { http: ["https://rpc-ubusuna.xeneascan.com"] },
   },
   blockExplorers: {
     default: {
       name: "XeneaScan",
-      url: "https://testnet.crossvaluescan.com/",
+      url: "https://ubusuna.xeneascan.com/",
     },
   },
 };
