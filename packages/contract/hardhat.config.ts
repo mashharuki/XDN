@@ -38,7 +38,7 @@ if (!SKIP_LOAD) {
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.22",
+    version: "0.8.30",
     settings: {
       optimizer: {
         enabled: true,
@@ -64,7 +64,7 @@ const config: HardhatUserConfig = {
       },
     },
     kura: {
-      url: "https://rpc-kura.cross.technology/",
+      url: "https://rpc-ubusuna.xeneascan.com",
       accounts: [`0x${deployerPrivateKey}`],
     },
   },
