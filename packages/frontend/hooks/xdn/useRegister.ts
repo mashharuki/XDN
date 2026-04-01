@@ -20,6 +20,11 @@ interface RegisterResult {
   message: string;
 }
 
+/**
+ * ドメインを登録するためのメソッド等をまとめたReact Hook
+ * @param props
+ * @returns
+ */
 export const useRegister = (props: RegisterProps) => {
   const [data, setData] = useState<RegisterResult | null>(null);
   const { writeContract, isPending, error, data: writeData } = useWriteContract();
