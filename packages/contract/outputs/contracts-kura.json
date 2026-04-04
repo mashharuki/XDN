@@ -1,1 +1,6 @@
-{}
+{
+  "contracts": {
+    "Domains": "0x77D775cCC1434D82D8d74e790C25c91FFC8e6108",
+    "SampleForwarder": "0xfDFaDffE28d17935A48ffB1Ab3076dBc8CadE623"
+  }
+}

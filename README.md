@@ -14,6 +14,11 @@ The Xenea Domain Name Service simplifies the ethereal address, which is a long s
 
 The Xenea Domain is minted as NFT(ERC721).
 
+## Deployed Contract
+
+- Testnet
+  - [0x77D775cCC1434D82D8d74e790C25c91FFC8e6108](https://ubusuna.xeneascan.com/address/0x744d7E0Ad1d72cC94f14df5064fD1735e6A49891)
+
 ## how to work
 
 ### Contract
